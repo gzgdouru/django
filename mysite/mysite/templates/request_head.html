@@ -1,0 +1,20 @@
+{% load my_filter %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>request head</title>
+</head>
+<body>
+    <h1>request head elems</h1>
+    <table>
+        {% for key,value in request_head.items %}
+        <tr>
+            <td>{{ key|cut:" " }}</td>
+            <td>{{ value }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
