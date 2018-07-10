@@ -1,0 +1,17 @@
+<header>
+    <div>
+        分享日记
+    </div>
+
+    <nav>
+        <ul>
+            <li><a href="/">首页</a></li>
+            <li><a href="/diary">分享日记首页</a></li>
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'diary:userinfo' %}">个人资料</a></li>
+            <li><a href="{% url 'diary:modify' %}">编辑个人资料</a></li>
+            <li><a href="{% url 'diary:post' %}">写日记</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+</header>

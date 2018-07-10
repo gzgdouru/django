@@ -1,0 +1,14 @@
+<header>
+    <h1>告白墙</h1>
+    <nav>
+        <ul>
+            <li><a href="/">首页</a></li>
+            <li><a href="{% url 'confession:index' %}">告白墙首页</a></li>
+            {% if user.is_authenticated %}
+            <li><a href="{% url 'confession:show' %}">查看个人简介</a></li>
+            <li><a href="{% url 'confession:modify' %}">编辑个人简介</a></li>
+            <li><a href="{% url 'confession:post' %}">发表讯息</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+</header>

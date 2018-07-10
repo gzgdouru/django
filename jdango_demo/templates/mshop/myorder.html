@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}
+我的订单
+{% endblock %}
+
+{% block header %}
+{% include "mshop/header.html" %}
+{% endblock %}
+
+{% block content %}
+<div>
+    {% for msg in messages %}
+    <p style="color: red;">{{ msg }}</p>
+    {% endfor %}
+
+    <h3>欢迎光临迷你小电商-我的订单</h3>
+    <p style="color: blue;">Welcome:{{ request.user.username }}</p>
+
+    <h4>我的订单</h4>
+    <div>
+        <table>
+            <tr>
+                <td>订单编号</td>
+                <td>姓名</td>
+                <td>地址</td>
+                <td>订购时间</td>
+                <td>是否付款</td>
+                <td>线上付款</td>
+            </tr>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.full_name }}</td>
+                <td>{{ order.address }}</td>
+                <td>{{ order.created_at }}</td>
+                <td>{{ order.paid|yesno:"是,否" }}</td>
+                <td>
+                    {% if not order.paid %}
+                    <button><a href="{% url 'mshop:payment' order.id %}">前往付款</a></button>
+                    {% else %}
+                    已付款
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+{% endblock %}

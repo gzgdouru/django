@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}
+分享日记
+{% endblock %}
+
+{% block header %}
+{% include "diary/header.html" %}
+{% endblock %}
+
+{% block content %}
+<div>
+    {% for message in messages %}
+    <h3 style="color: red;">{{ message }}</h3>
+    {% endfor %}
+
+    <h3>使用者信息</h3>
+    <p>
+        您的姓名: {{ userinfo.user.username }}<br>
+        电子邮件: {{ userinfo.user.email }}<br>
+        身高: {{ userinfo.height }}<br>
+        性别: {{ userinfo.male|yesno:"男,女" }}<br>
+        个人网站: <a href="{{ userinfo.website }}">{{ userinfo.website }}</a>
+    </p>
+</div>
+{% endblock %}

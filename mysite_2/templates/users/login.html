@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test login</title>
+</head>
+<body>
+    <form role="form" action="/login" method="post">
+        <!--<label>Username</label>-->
+        <!--<input type="text" name="username">-->
+        <!--<label>Password</label>-->
+        <!--<input type="password" name="password">-->
+        <!--<input type="submit" name="Submit">-->
+        {%csrf_token %}
+        {{form.as_p}}
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>

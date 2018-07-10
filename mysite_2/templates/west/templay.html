@@ -1,0 +1,10 @@
+{%extends "base.html"%} <!--继承于base.html-->
+
+<!--替换block-->
+{%block mainbody%}
+
+{% for item in staffs %}
+<p>{{item.id}}, {{item.name}}</p>
+{% endfor %}
+
+{%endblock%}

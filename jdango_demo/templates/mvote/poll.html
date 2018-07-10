@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+投票趣
+{% endblock %}
+
+{% block header %}
+{% include "mvote/header.html" %}
+{% endblock %}
+
+{% block content %}
+<div>
+    {% for message in messages %}
+    <p style="color: red;">{{ message }}</p>
+    {% endfor %}
+
+    <h3>{{ poll.name }}</h3>
+    {% for pollitem in pollitems %}
+    <div>
+        <p>{{ pollitem.name }}</p>
+        <img src="{% static pollitem.image_url %}" alt="photo"><br>
+        <h4>
+            <a href="{% url 'mvote:vote' poll.id pollitem.id %}" title="投票">投票</a>
+            目前票数:{{ pollitem.vote }}
+            <button>
+                <a href="{% url 'mvote:remove' poll.id pollitem.id %}">删除</a>
+            </button>
+        </h4>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>二手车信息</title>
+</head>
+<body>
+    <table>
+        <tr>
+            {% for name in car_maker %}
+            <td>
+                <a href="{% url 'demo2:index' forloop.counter0 %}">{{ name }}</a>
+            </td>
+            {% endfor %}
+        </tr>
+    </table>
+
+   <table>
+       <tr>
+           <td>厂商</td>
+           <td>型号</td>
+           <td>价格</td>
+           <td>库存</td>
+       </tr>
+       {% for car in cars|dictsort:"count" %}
+       <tr>
+           <td>{{ maker_name }}</td>
+           <td>{{ car.model }}</td>
+           <td>{{ car.price|floatformat:2|intcomma }}</td>
+           <td>{{ car.count }}</td>
+       </tr>
+       {% empty %}
+       <tr>
+           <td>{{ maker_name }}</td>
+           <td>暂无</td>
+           <td>暂无</td>
+           <td>暂无</td>
+       </tr>
+       {% endfor %}
+    </table>
+</body>
+</html>

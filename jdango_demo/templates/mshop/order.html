@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}
+订单
+{% endblock %}
+
+{% block header %}
+{% include "mshop/header.html" %}
+{% endblock %}
+
+{% block content %}
+<div>
+    {% for message in messages %}
+    <p style="color: red;">{{ message }}</p>
+    {% endfor %}
+
+    <h3>欢迎光临迷你小电商-订单页面</h3>
+    <p style="color: blue">{{ request.user.username }}</p>
+
+    <h4>新订单</h4>
+    <div>
+        <table>
+            <tr>
+                <td>产品名称</td>
+                <td>单价</td>
+                <td>数量</td>
+                <td>小计</td>
+            </tr>
+            {% for item in cart %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.product.price }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.total_price }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <button><a href="{% url 'mshop:cart' %}">回购物车</a></button>
+        <button><a href="{% url 'mshop:index' %}">回首页</a></button>
+    </div>
+
+    <div>
+        总计: {{ cart.summary }}元
+        <form action="." method="post">
+            {% csrf_token %}
+            <table>
+                {{ form.as_table }}
+            </table>
+            <input type="submit" value="提交订单">
+        </form>
+    </div>
+</div>
+{% endblock %}

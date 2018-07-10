@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}
+线上支付
+{% endblock %}
+
+{% block header %}
+{% include "mshop/header.html" %}
+{% endblock %}
+
+{% block content %}
+<div>
+    {% for msg in messages %}
+    <p style="color: red;">{{ msg }}</p>
+    {% endfor %}
+
+    <h3>欢迎光临迷你小电商-线上支付页面</h3>
+    <p style="color: blue;">Welcome: {{ request.user.username }}</p>
+
+    <div>
+        <h4>线上支付(订单编号:{{ order.id }})</h4>
+        <table>
+            <tr>
+                <td>产品名称</td>
+                <td>单价</td>
+                <td>数量</td>
+                <td>小计</td>
+            </tr>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.name }}</td>
+                <td>{{ item.price }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.subtotal }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        <p>总计:{{ total|default:0 }}元</p>
+        <button>
+            <a href="{% url 'mshop:payment_done' order.id %}">付款</a>
+        </button>
+    </div>
+</div>
+{% endblock %}

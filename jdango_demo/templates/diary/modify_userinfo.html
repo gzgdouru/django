@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}
+分享日记-修改用户信息页面
+{% endblock %}
+
+{% block header %}
+{% include "diary/header.html" %}
+{% endblock %}
+
+{% block content %}
+<div>
+    <form action="." method="post">
+        {% csrf_token %}
+        <table>
+            {{ userinfo_form.as_table }}
+        </table>
+        <input type="submit" value="修改个人资料">
+    </form>
+</div>
+{% endblock %}

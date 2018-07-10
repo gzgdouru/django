@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load mvote_extras %}
+{% load static %}
+
+{% block title %}
+迷你小电商-分类商品
+{% endblock %}
+
+{% block header %}
+{% include "mshop/header.html" %}
+{% endblock %}
+
+{% block content %}
+<div>
+    {% for message in messages %}
+    <h3 style="color: red;">{{ message }}</h3>
+    {% endfor %}
+    <h3>欢迎光临迷你小电商网站-{{ category.name }}<br>
+    </h3>
+
+    {% if request.user.is_authenticated %}
+    <p style="color: blue;">Welcome: {{ request.user.username }}</p>
+    {% else %}
+    <p>请先注册(登录)您的账号才能购买本站优惠商品</p>
+    {% endif %}
+
+    {% for product in products %}
+    <div>
+        <img src="{% static product.image %}"><br>
+        <h4><a href="{% url 'mshop:product' product.id %}" >{{ product.name }}</a></h4>
+        <p>NT$ {{ product.price }}</p>
+        <p>库存: {{ product.stock }}</p>
+        <p>{{ product.description }}</p>
+        <button>
+            <a href="{% url 'mshop:additem' product.id 1 %}?next={{ request.path }}">放入购物车</a>
+        </button>
+    </div>
+    {% empty %}
+    <h3>此分类目前没有任何商品</h3>
+    {% endfor %}
+
+    {% if products.has_previous %}
+    <button>
+        <a href="?p={{ products.previous_page_number }}">上一页</a>
+    </button>
+    {% endif %}
+
+    {% if products.has_next %}
+    <button>
+        <a href="?p={{ products.next_page_number }}">下一页</a>
+    </button>
+    {% endif %}
+
+    <button>第{{ products.number }}页</button>
+
+</div>
+{% endblock %}

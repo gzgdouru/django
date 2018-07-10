@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}
+告白墙-用户简介查看页面
+{% endblock %}
+
+{% block header %}
+{% include "confession_wall/header.html" %}
+{% endblock %}
+
+{% block content %}
+<div>
+    {% include "msg_base.html" %}
+
+    <h3>用户简介</h3>
+    <div>
+        昵称: {{ profile.nickname }}<br>
+        性别: {{ profile.male|yesno:"男,女" }}<br>
+        年龄: {{ profile.age }}
+    </div>
+</div>
+{% endblock %}

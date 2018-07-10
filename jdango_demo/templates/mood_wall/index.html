@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}
+心情墙-主页
+{% endblock %}
+
+{% block header %}
+{% include "mood_wall/header.html" %}
+{% endblock %}
+
+{% block content %}
+<div>
+    <div>
+        <h3>~~宝宝心里苦, 宝宝只在这里说~~</h3>
+    </div>
+
+    {% for post in posts %}
+    <div>
+        <p>[{{ post.nickname }}] 觉得 {{ post.mood }}</p>
+        <p>{{ post.message|linebreaks }}</p>
+        <p><small>{{ post.pub_time }}</small></p>
+        <p><button onclick="go_delete({{ post.id }})"><small>删除</small></button></p>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+    function go_delete(id) {
+        var user_pass = document.getElementById("user_pass").value;
+        if (user_pass != "")
+        {
+            var url = "/mood/delete/" + id + "/" + user_pass;
+            window.location = url;
+        }
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}
+查看购物车
+{% endblock %}
+
+{% block header %}
+{% include "mshop/header.html" %}
+{% endblock %}
+
+{% block content %}
+<div>
+    <h3>欢迎光临迷你小电商</h3>
+    <p style="color: blue;">Welcome:{{ request.user.username }}</p>
+
+    <div>
+        <h4>我的购物车</h4>
+        <table>
+            <tr>
+                <td>产品名称</td>
+                <td>单价</td>
+                <td>数量</td>
+                <td>小计</td>
+                <td>删除</td>
+            </tr>
+
+            {% for item in cart %}
+            <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.product.price }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.total_price }}</td>
+                <td><a href="{% url 'mshop:removeitem' item.product.id %}">删除</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+        <button><a href="{% url 'mshop:order' %}">我要订购</a></button>
+        <p>总计: {{ cart.summary }}元</p>
+    </div>
+</div>
+{% endblock %}

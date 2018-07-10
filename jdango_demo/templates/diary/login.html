@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}
+登入分享日记
+{% endblock %}
+
+{% block header %}
+{% include "diary/header.html" %}
+{% endblock %}
+
+{% block content %}
+    {% for message in messages %}
+    <p style="color: red;">{{ message }}</p>
+    {% endfor %}
+
+    <div>
+        <h3>登入我的私人日记</h3>
+        <form action="." method="post">
+            {% csrf_token %}
+            <table>
+                 {{ login_form.as_table }}
+            </table>
+            <input type="submit" value="登入">
+        </form>
+    </div>
+{% endblock %}

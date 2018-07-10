@@ -1,0 +1,20 @@
+<header>
+    <h1>迷你小电商</h1>
+    <nav>
+        <ul>
+            <li><a href="/">首页</a></li>
+            <li><a href="{% url 'mshop:index' %}">迷你小电商首页</a></li>
+            <li><a href="{% url 'mshop:cart' %}">查看购物车</a></li>
+            <li><a href="{% url 'mshop:myorder' %}">我的订单</a></li>
+            <li>产品分类列表:
+            <ul>
+                {% for category in categorys %}
+                <li><a href="/mshop/category/{{ category.id }}">{{ category.name }}</a></li>
+                {% empty %}
+                暂无产品分类
+                {% endfor %}
+            </ul>
+            </li>
+        </ul>
+    </nav>
+</header>

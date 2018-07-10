@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}
+用户信息
+{% endblock %}
+
+{% block content %}
+<div>
+    <h3>使用者信息</h3>
+    <p>
+        您的姓名: {{ userinfo.user.username|upper }}<br>
+        电子邮件: {{ userinfo.user.email }}<br>
+        身高: {{ userinfo.height }}<br>
+        性别: {{ userinfo.male|yesno:"男生,女生" }}
+    </p>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}
+user扩展
+{% endblock %}
+
+{% block content %}
+    {% for message in messages %}
+    <p style="color: red;">{{ message }}</p>
+    {% endfor %}
+
+    <div>
+        <h3>用户登入</h3>
+        <form action="." method="post">
+            {% csrf_token %}
+            <table>
+                 {{ login_form.as_table }}
+            </table>
+            <input type="submit" value="登入">
+        </form>
+    </div>
+{% endblock %}

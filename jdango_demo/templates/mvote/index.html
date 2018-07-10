@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load mvote_extras %}
+
+{% block title %}
+投票趣-主页
+{% endblock %}
+
+{% block header %}
+{% include "mvote/header.html" %}
+{% endblock %}
+
+{% block content %}
+<div>
+    {% for message in messages %}
+    <h3 style="color: red;">{{ message }}</h3>
+    {% endfor %}
+    <h3>欢迎光临投票趣</h3>
+    <!--<p>欢迎使用github注册/登入你的账号, 以拥有投票和制作投票的功能.</p>-->
+
+    {% for poll in polls %}
+    <div>
+        <a href="{% url 'mvote:poll' poll.id %}">
+            总票数:{{ poll.id|show_votes}},
+            项目数:{{ poll.id|show_items }}:
+            {{ poll.name }}, added by [{{ poll.user }}],
+            created at {{ poll.created_at }}
+        </a>
+    </div>
+    {% empty %}
+    <h3>目前并没有活跃中的投票项目</h3>
+    {% endfor %}
+
+    <button>
+        <a href="?p=1">首页</a>
+    </button>
+
+    {% if polls.has_previous %}
+    <button>
+        <a href="?p={{ polls.previous_page_number }}">上一页</a>
+    </button>
+    {% endif %}
+
+    {% if polls.has_next %}
+    <button>
+         <a href="?p={{ polls.next_page_number }}">下一页</a>
+    </button>
+    {% endif %}
+
+    <button>
+        <a href="?p={{ polls.paginator.num_pages }}">尾页</a>
+    </button>
+
+     <button>{{ polls.number }}</button>
+</div>
+{% endblock %}

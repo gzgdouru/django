@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+查看产品详细
+{% endblock %}
+
+{% block header %}
+{% include "mshop/header.html" %}
+{% endblock %}
+
+{% block content %}
+<div>
+    {% for message in messages %}
+    <p style="color: red;">{{ message }}</p>
+    {% endfor %}
+
+    <h3>{{ product.name|default:"产品编号错误" }}</h3>
+    <div>
+        <img src="{% static product.image %}">
+    </div>
+    <div>
+        <h2>{{ product.name }}</h2>
+        <h3>
+            售价: {{ product.price }}元<br>
+            库存: {{ product.stock }}
+        </h3>
+        <p>{{ product.description|linebreaks }}</p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}
+{{ product.nickname|default:"找不到指定的手机" }}
+{% endblock %}}
+
+{% block content %}
+<div>
+    {% if product %}
+    <table>
+        <tr>
+            <td><h3>{{ product.nickname }}</h3></td>
+        </tr>
+        <tr>
+            <td>{{ product.description }}</td>
+        </tr>
+        <tr>
+            <td>西元{{ product.year }}年出厂</td>
+        </tr>
+        <tr>
+            <td>售价: {{ product.price }}</td>
+        </tr>
+
+        {% for iamge in images %}
+        <tr>
+            <td><img src="{{ image.url }}" alt="产品图片"></td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td>暂无图片</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <h2>找不到指定手机</h2>
+    {% endif %}
+</div>
+{% endblock %}

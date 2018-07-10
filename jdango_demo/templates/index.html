@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block header %}
+<h1>Welcome to Django</h1>
+{% endblock %}
+
+{% block content %}
+<div>
+    {% for message in messages %}
+    <p style="color: red;">{{ message }}</p>
+    {% endfor %}
+
+    <nav>
+        <ul>
+            <li><a href="/">Home</a></li>
+            {% if request.user.is_authenticated %}
+            <li><a href="{% url 'account_reset_password' %}">重设密码</a></li>
+            <li><a href="{% url 'account_email' %}">变更电子邮件</a></li>
+            <li><a href="{% url 'account_logout' %}">登出</a></li>
+            {% else %}
+            <li><a href="{% url 'account_login' %}">登入</a></li>
+            <li><a href="{% url 'account_signup' %}">注册</a></li>
+            {% endif %}
+            <li><a href="admin/">后台管理</a></li>
+        </ul>
+
+        <ul>
+            <li><a href="diary/">分享日记示例</a></li>
+            <li><a href="extenduser/">扩展用户示例</a></li>
+            <li><a href="mood/">心情墙示例</a></li>
+            <li><a href="mvote/">投票趣示例</a></li>
+            <li><a href="{% url 'mshop:index' %}">迷你电商示例</a></li>
+            <li><a href="{% url 'gen:index' %}">名句佳作图片生成器示例</a></li>
+            <li><a href="{% url 'confession:index' %}">告白墙示例</a></li>
+        </ul>
+    </nav>
+</div>
+{% endblock %}

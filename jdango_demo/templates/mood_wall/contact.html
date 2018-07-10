@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}
+心情墙-联系我们
+{% endblock %}
+
+{% block header %}
+{% include "mood_wall/header.html" %}
+{% endblock %}
+
+{% block content %}
+<div>
+    {% if message %}
+    <h3 style="color: red;">{{ message }}</h3>
+    <p>{{ user_name }}</p>
+    <p>{{ user_city }}</p>
+    <p>{{ user_school }}</p>
+    <p>{{ user_email }}</p>
+    <p>{{ user_message|linebreaks }}</p>
+    {% endif %}
+
+    <form action="." method="post">
+        {% csrf_token %}
+        <h3>写信给管理员</h3>
+        {{ form.as_p }}
+        <input type="submit" value="送出">
+    </form>
+</div>
+{% endblock %}

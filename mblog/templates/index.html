@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+<!DOCTYPE html>
+<html lang="en">
+{% block title %}
+欢迎光临我的部落格
+{% endblock %}
+
+{% block headmessage %}
+<h3>本站文章列表</h3>
+{% endblock %}
+
+{% block content %}
+{% for post in posts %}
+<p>
+    <a href="/post/{{ post.slug }}">标题:{{ post.title }}</a>
+</p>
+<p>内容摘要:{{ post.body|truncatechars:40 }}</p>
+<p>发布时间:{{ post.pub_date|date:"Y M d, h:m:s" }}</p>
+{% endfor %}
+{% endblock %}

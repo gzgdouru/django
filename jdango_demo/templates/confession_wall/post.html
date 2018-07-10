@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}
+告白墙-发布讯息页面
+{% endblock %}
+
+{% block header %}
+{% include "confession_wall/header.html" %}
+{% endblock %}
+
+{% block content %}
+<div>
+    {% include "msg_base.html" %}
+    <h3>告白讯息编辑</h3>
+    <form action="." method="post">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <input type="submit" value="发表">
+    </form>
+</div>
+{% endblock %}

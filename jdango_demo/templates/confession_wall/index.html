@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}
+告白墙-首页
+{% endblock %}
+
+{% block header %}
+{% include "confession_wall/header.html" %}
+{% endblock %}
+
+{% block content %}
+<div>
+    {% include "msg_base.html" %}
+
+    {% if user.username %}
+    <h3 style="color: blue">Welcome: {{ user.username }}</h3>
+    {% else %}
+    <h3 style="color: #cc6600">只有登录的用户才能发表告白讯息, 请先登录.</h3>
+    {% endif %}
+
+    {% for post in posts %}
+    <div>
+        <strong>{{ post.user.profile_user.nickname|default:"post.user.username" }}</strong>:<br>
+        {{ post.context|linebreaks }}
+        date: {{ post.created_time }}<br>
+        <button>
+            <a href="{% url 'confession:remove' post.id %}"><em>删除</em></a>
+        </button>
+    </div>
+    {% if not forloop.last %}<hr style="color: darkorchid;">{% endif %}
+    {% empty %}
+    暂无告白讯息
+    {% endfor %}
+</div>
+{% endblock %}

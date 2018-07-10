@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+名言佳句图片生成器
+{% endblock %}
+
+{% block header %}
+{% include "gen/header.html" %}
+{% endblock %}
+
+{% block content %}
+<div>
+    {% for msg in messages %}
+    <p style="color: red;">{{ msg }}</p>
+    {% endfor %}
+
+    <h3>名言佳句图片生成器</h3>
+    {% for file in files %}
+    <div>
+        <img src="{% static file %}" width="50%">
+    </div>
+    {% endfor %}
+
+    {% if files.has_previous %}
+    <button><a href="?p={{ files.previous_page_number }}">上一页</a></button>
+    {% endif %}
+
+    {% if files.has_next %}
+    <button><a href="?p={{ files.next_page_number }}">下一页</a></button>
+    {% endif %}
+
+    <button>第{{ files.number }}页</button>
+</div>
+{% endblock %}

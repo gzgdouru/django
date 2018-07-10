@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title%}
+名言佳作图片生成器
+{% endblock %}
+
+{% block header %}
+{% include "gen/header.html" %}
+{% endblock %}
+
+{% block content %}
+<div>
+    {% for msg in messages %}
+    <p style="color: red;">{{ msg }}</p>
+    {% endfor %}
+
+    <script>
+        $(document).ready(function () {
+            $('#id_backfile').change(function () {
+                $('#show_back_image').html('<img src=\"' + '/static/images/' +
+                $(this).find(':selected').val() + '\"');
+            });
+        });
+    </script>
+
+    {% if newFile %}
+        <div>
+            <p>您的作品:</p>
+            <img src="{% static newFile %}"><br>
+            <script>
+                function goBack() {
+                    window.history.back()
+                }
+            </script>
+            <button onclick="goBack()">回上一页重新设定</button>
+        </div>
+    {% else %}
+        <h3>输入文字, 按下按钮, 轻松完成</h3>
+        <div>
+            <h4>背景图片</h4>
+            <div id="show_back_image">
+                <img src="{% static 'images/2.jpg' %}">
+            </div>
+        </div>
+
+        <div>
+            <form action="." method="post">
+                {% csrf_token %}
+                <table>
+                    {{ form.as_table }}
+                </table>
+                <input type="submit" value="开始产生">
+            </form>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

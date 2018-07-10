@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load diary_filter %}
+
+{% block title %}
+分享日记
+{% endblock %}
+
+{% block header %}
+{% include "diary/header.html" %}
+{% endblock %}
+
+{% block content %}
+    {% for message in messages %}
+    <p style="color: red;">{{ message }}</p>
+    {% endfor %}
+
+    <div>
+        <h3>{{ username|default:"我" }}的私人日记</h3>
+        {% for diary in diaries %}
+        {{ diary.ddate|date:"Y-m-d" }}<br>
+        {{ diary.note|linebreaks }}
+        今日花费:{{ diary.budget }}元, 体重:{{ diary.weight }}公斤<br>
+
+        {% if not forloop.last %}
+        <hr>
+        {% endif %}
+
+        {% empty %}
+        <h3><em>登入网站才能使用日记功能</em></h3>
+
+        {% endfor %}
+    </div>
+{% endblock %}

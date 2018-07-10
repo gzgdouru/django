@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+</head>
+<body>
+    <nav>
+        <p>
+            <a href="#">现正播出{{ tv.name }}</a>
+        </p>
+        <ul>
+            <li>
+                <a href="/demo1">Home</a>
+            </li>
+            <li>
+                <a href="{% url 'demo1:index' 0 %}">东森</a>
+            </li>
+            <li>
+                <a href="{% url 'demo1:index' 1 %}">民视</a>
+            </li>
+            <li>
+                <a href="{% url 'demo1:index' 2 %}">台视</a>
+            </li>
+            <li>
+                <a href="{% url 'demo1:index' 3 %}">华视</a>
+            </li>
+        </ul>
+    </nav>
+
+    <div>
+        <p>code:{{ tv.tvcode }}</p>
+        <p>{% now 'Y-m-d H:m:s a' %}</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+名言佳句图片产生器VIP
+{% endblock %}
+
+{% block header %}
+{% include "gen/header.html" %}
+{% endblock %}
+
+{% block content %}
+<div>
+    {% for msg in messages %}
+    <p style="color: red;">{{ msg }}</p>
+    {% endfor %}
+
+    {% if new_file %}
+    <div>
+        <p>您的作品:</p>
+        <img src="{% static new_file %}"><br>
+        <script>
+            function goBack() {
+                window.history.back()
+            }
+        </script>
+        <button onclick="goBack()">回上一页重新设定</button>
+    </div>
+    {% else %}
+    <h3>vip自订背景图功能</h3>
+    <div>
+        <h4>背景图片</h4>
+        <div>
+            {% if custom_backfile %}
+            <img src="{% static custom_backfile %}">
+            {% else %}
+            <img src="{% static 'images/2.jpg' %}">
+            {% endif %}
+        </div>
+    </div>
+
+    <div>
+        <h4>变更背景图案</h4>
+        <form action="." method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <table>
+                {{ upload_form.as_table }}
+            </table>
+            <input type="submit" value="变更图片" name="change_backfile">
+        </form>
+
+    </div>
+
+    <div>
+        <form action="." method="post">
+            {% csrf_token %}
+            <table>
+                {{ form.as_table }}
+            </table>
+            <input type="submit" value="开始产生">
+        </form>
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}
