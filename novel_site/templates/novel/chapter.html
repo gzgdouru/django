@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}
+    章节
+{% endblock %}
+
+{% block main %}
+    <h3>{{ chapter.chapter_name }}</h3>
+    {{ chapter_content|safe }}
+    <p style="color: red"><strong>内容转载于:{{ chapter.chapter_url }}, 如有侵权, 请通知删除.</strong></p>
+{% endblock %}

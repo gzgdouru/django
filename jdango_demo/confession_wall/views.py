@@ -4,10 +4,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import Profile, Post
 from .forms import ProfileForm, PostForm
+import logging
+
+logger = logging.getLogger('django')
 
 # Create your views here.
 def index(request):
     posts = Post.objects.all().order_by("-created_time")
+    logger.info("你好!")
     return render(request, "confession_wall/index.html", context=locals())
 
 @login_required

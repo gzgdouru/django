@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load highlight %}
+
+{% block title %}
+    搜索页面
+{% endblock %}
+
+{% block content %}
+    {% if query %}
+        {% for result in page.object_list %}
+            <div>
+                <a href="{{ result.object.get_absolute_url }}">{{ result.object.title }}</a>
+            </div>
+
+            {% empty %}
+            <p>没有搜索到你想要的结果</p>
+        {% endfor %}
+    {% else %}
+        请输入搜索关键词，例如 django
+    {% endif %}
+{% endblock %}

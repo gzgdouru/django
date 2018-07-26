@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ post.title }}
+{% endblock %}
+
+{% block content %}
+    <div style="width: 960px; float: left; border: solid 1px; margin: 0 5px 5px 0; padding: 20px;">
+        <h3>{{ post.title }}</h3>
+        <p>{{ post.content|linebreaks }}</p>
+        <p>分类:<a href="{% url 'blog:category' post.category.id %}">{{ post.category }}</a></p>
+        <p>
+            <small>posted@{{ post.created_time|date:"Y-m-d H:i" }} {{ post.author.username }} 阅读({{ post.views }})
+            </small>
+        </p>
+
+        {% if last_post %}
+            <p>上一篇:<a href="{% url 'blog:detail' last_post.id %}">{{ last_post.title }}</a></p>
+        {% endif %}
+
+        {% if next_post %}
+            <p>下一篇:<a href="{% url 'blog:detail' next_post.id %}">{{ next_post.title }}</a></p>
+        {% endif %}
+
+        <hr>
+        {% if user.is_authenticated %}
+            <p>发表评论</p>
+            <form action="{% url 'blog:comment' post.id %}" method="post">
+            {% csrf_token %}
+                <div>
+                    <label for="nickname">昵称:</label>
+                    <input type="text" name="nickname" value="{{ user.nickname }}" readonly>
+                </div>
+
+                <div>
+                    评论内容:<br>
+                    <textarea rows="5" cols="30" name="content" required></textarea><br>
+                </div>
+
+                <input type="submit" value="提交">
+            </form>
+        {% else %}
+            <p>
+                <small>注册用户登录后才能发表评论, 请<a href="{% url 'account_login' %}">登录</a>或<a href="{% url 'account_signup' %}">注册</a>
+                </small>
+            </p>
+        {% endif %}
+
+        <h3>评论列表:</h3>
+        {% for comment in comments %}
+            <div>
+                <p>{{ comment.created_time|date:"Y-m-d H:i" }} {{ comment.user.username }}</p>
+                <p>{{ comment.content|linebreaks }}</p>
+            </div>
+        {% endfor %}
+        <hr>
+
+        <div>
+            {% if not comments.has_previous %}
+                {% if comments.has_next %}
+                    <p style="text-align: right"><a href="{% url 'blog:detail' post.id %}?p={{ comments.next_page_number }}">下一页</a></p>
+                {% endif %}
+            {% else %}
+                <div style="text-align: center;">
+                    共{{ comments.paginator.num_pages }}页:
+                    {% if comments.has_previous %}
+                        <button><a href="{% url 'blog:detail' post.id %}?p={{ comments.previous_page_number }}">上一页</a></button>
+                    {% endif %}
+
+                    <strong style="color: blue;">{{ comments.number }}</strong>
+
+                    {% if comments.has_next %}
+                        <button><a href="{% url 'blog:detail' post.id %}?p={{ comments.next_page_number }}">下一页</a></button>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    {% include "nav.html" %}
+{% endblock %}

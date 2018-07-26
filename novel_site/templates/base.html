@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+    <header>
+        <ul>
+            <li><a href="/">首页</a></li>
+        </ul>
+        <hr>
+    </header>
+
+    {% block main %}{% endblock %}
+
+    <footer style="clear: both">
+        <hr>
+        <p style="text-align: center"><small>Copyright ©2018 gzgdouru@163.com</small></p>
+    </footer>
+</body>
+</html>

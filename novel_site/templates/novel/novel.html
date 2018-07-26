@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ novel.novel_name }}
+{% endblock %}
+
+{% block main %}
+    <h3>{{ novel.novel_name }}-章节:</h3>
+    <table>
+        <tr>
+            {% for chapter in chapters %}
+                <td><a href="{% url 'novel:chapter_detail' novel.id chapter.id  %}">{{ chapter.chapter_name }}</a></td>
+                {% if forloop.counter|divisibleby:5 %}
+                    </tr>
+                    <tr>
+                {% endif %}
+                {% empty %}
+                暂无 {{ novel_name }} 章节
+            {% endfor %}
+            </tr>
+    </table>
+
+    </div>
+{% endblock %}
+
