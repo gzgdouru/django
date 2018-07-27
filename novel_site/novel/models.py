@@ -120,56 +120,110 @@ class DjangoSession(models.Model):
         db_table = 'django_session'
 
 
-class TbBlackTechnologicSystem(models.Model):
+class TbChapter0(models.Model):
     novel = models.ForeignKey('TbNovel', models.DO_NOTHING, blank=True, null=True)
     chapter_url = models.CharField(unique=True, max_length=255, blank=True, null=True)
     chapter_name = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False
-        db_table = 'tb_black_technologic_system'
-        ordering = ["-chapter_url"]
+        db_table = 'tb_chapter_0'
 
 
-class TbFullTimeMage(models.Model):
-    novel = models.ForeignKey('TbNovel', models.DO_NOTHING, blank=True, null=True)
-    chapter_url = models.CharField(unique=True, max_length=255, blank=True, null=True)
-    chapter_name = models.CharField(max_length=255, blank=True, null=True)
-    chapter_content = models.TextField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'tb_full_time_mage'
-        ordering = ["-chapter_url"]
-
-
-class TbJidaotianmo(models.Model):
+class TbChapter1(models.Model):
     novel = models.ForeignKey('TbNovel', models.DO_NOTHING, blank=True, null=True)
     chapter_url = models.CharField(unique=True, max_length=255, blank=True, null=True)
     chapter_name = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False
-        db_table = 'tb_jidaotianmo'
-        ordering = ["-chapter_url"]
+        db_table = 'tb_chapter_1'
 
 
-class TbMutianji(models.Model):
+class TbChapter2(models.Model):
     novel = models.ForeignKey('TbNovel', models.DO_NOTHING, blank=True, null=True)
     chapter_url = models.CharField(unique=True, max_length=255, blank=True, null=True)
     chapter_name = models.CharField(max_length=255, blank=True, null=True)
 
     class Meta:
         managed = False
-        db_table = 'tb_mutianji'
-        ordering = ["-chapter_url"]
+        db_table = 'tb_chapter_2'
+
+
+class TbChapter3(models.Model):
+    novel = models.ForeignKey('TbNovel', models.DO_NOTHING, blank=True, null=True)
+    chapter_url = models.CharField(unique=True, max_length=255, blank=True, null=True)
+    chapter_name = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'tb_chapter_3'
+
+
+class TbChapter4(models.Model):
+    novel = models.ForeignKey('TbNovel', models.DO_NOTHING, blank=True, null=True)
+    chapter_url = models.CharField(unique=True, max_length=255, blank=True, null=True)
+    chapter_name = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'tb_chapter_4'
+
+
+class TbChapter5(models.Model):
+    novel = models.ForeignKey('TbNovel', models.DO_NOTHING, blank=True, null=True)
+    chapter_url = models.CharField(unique=True, max_length=255, blank=True, null=True)
+    chapter_name = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'tb_chapter_5'
+
+
+class TbChapter6(models.Model):
+    novel = models.ForeignKey('TbNovel', models.DO_NOTHING, blank=True, null=True)
+    chapter_url = models.CharField(unique=True, max_length=255, blank=True, null=True)
+    chapter_name = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'tb_chapter_6'
+
+
+class TbChapter7(models.Model):
+    novel = models.ForeignKey('TbNovel', models.DO_NOTHING, blank=True, null=True)
+    chapter_url = models.CharField(unique=True, max_length=255, blank=True, null=True)
+    chapter_name = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'tb_chapter_7'
+
+
+class TbChapter8(models.Model):
+    novel = models.ForeignKey('TbNovel', models.DO_NOTHING, blank=True, null=True)
+    chapter_url = models.CharField(unique=True, max_length=255, blank=True, null=True)
+    chapter_name = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'tb_chapter_8'
+
+
+class TbChapter9(models.Model):
+    novel = models.ForeignKey('TbNovel', models.DO_NOTHING, blank=True, null=True)
+    chapter_url = models.CharField(unique=True, max_length=255, blank=True, null=True)
+    chapter_name = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'tb_chapter_9'
 
 
 class TbNovel(models.Model):
     novel_name = models.CharField(unique=True, max_length=255, blank=True, null=True)
     site_name = models.CharField(max_length=255, blank=True, null=True)
     url = models.CharField(unique=True, max_length=255, blank=True, null=True)
-    chapter_table = models.CharField(unique=True, max_length=64, blank=True, null=True)
 
     class Meta:
         managed = False
