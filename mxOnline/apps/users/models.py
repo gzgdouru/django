@@ -25,6 +25,9 @@ class EmailVerifyRecord(models.Model):
     send_type = models.CharField(max_length=10, choices=(("register", "注册"), ("forget", "找回密码")))
     send_time = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return "{}({})".format(self.code, self.email)
+
     class Meta:
         verbose_name = "邮箱验证码"
         verbose_name_plural = verbose_name
@@ -35,6 +38,9 @@ class Banner(models.Model):
     url = models.URLField(max_length=200, verbose_name="访问地址")
     index = models.PositiveIntegerField(default=100, verbose_name="顺序")
     add_time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
 
     class Meta:
         verbose_name = "轮播图"

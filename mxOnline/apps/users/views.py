@@ -1,3 +1,158 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, HttpResponse
+from django.contrib.auth import authenticate
+from django.contrib.auth import login
+from django.contrib.auth.backends import ModelBackend
+from django.db.models import Q
+from django.views.generic import View
+from django.contrib.auth.hashers import make_password
+
+from .models import UserProfile, EmailVerifyRecord
+from .forms import LoginForm, RegisterForm, ForgetPwdForm, ModifyPwdForm
+from untis.email_send import send_register_email
+
+
+class CustomBackend(ModelBackend):
+    def authenticate(self, request, username=None, password=None, **kwargs):
+        try:
+            user = UserProfile.objects.get(Q(username=username) | Q(email=username))
+            if user.check_password(password):
+                return user
+            else:
+                return None
+        except:
+            return None
 
 # Create your views here.
+
+
+class RegisterView(View):
+    def get(self, request):
+        registerForm = RegisterForm()
+        return render(request, "register.html", context={
+            "register_form" : registerForm
+        })
+
+    def post(self, request):
+        registerForm = RegisterForm(request.POST)
+        if registerForm.is_valid():
+            userProfile = UserProfile()
+            userProfile.username = request.POST.get("email")
+            userProfile.email = request.POST.get("email")
+            if UserProfile.objects.filter(email=userProfile.email):
+                return render(request, "register.html", context={
+                    "msg" : "该用户已存在",
+                    "register_form" : registerForm
+                })
+
+            userProfile.password = make_password(request.POST.get("password"))
+            userProfile.is_active = False
+
+            send_register_email(userProfile.username, "register")
+            userProfile.save()
+
+            return redirect("/login")
+        else:
+            return render(request, "register.html", context={
+                "register_form" : registerForm
+            })
+
+
+class ActiveView(View):
+    def get(self, request, active_code):
+        all_records = EmailVerifyRecord.objects.filter(code=active_code)
+        if all_records:
+            for record in all_records:
+                email = record.email
+                user = UserProfile.objects.get(email=email)
+                user.is_active = True
+                user.save()
+        else:
+            return HttpResponse("无效链接或者链接已失效!")
+        return redirect("/login/")
+
+
+class LoginView(View):
+    def get(self, request):
+        return render(request, "login.html", context={})
+
+    def post(self, request):
+        loginForm = LoginForm(request.POST)
+        if loginForm.is_valid():
+            userName = request.POST.get("username")
+            passWord = request.POST.get("password")
+            user = authenticate(username=userName, password=passWord)
+            if user is not None:
+                if user.is_active:
+                    login(request, user)
+                    return render(request, "index.html", context={})
+                else:
+                    return render(request, "login.html", context={
+                        "msg" : "用户未激活"
+                    })
+            else:
+                return render(request, "login.html", context={
+                    "msg" : "用户或密码错误!"
+                })
+        else:
+            return render(request, "login.html", context={
+                "login_form" : loginForm
+            })
+
+
+class ForgetPwdView(View):
+    def get(self, request):
+        forgetForm = ForgetPwdForm()
+        return render(request, "forgetpwd.html", context={
+            "forget_form" : forgetForm
+        })
+
+    def post(self, request):
+        forgetForm = ForgetPwdForm(request.POST)
+        if forgetForm.is_valid():
+            if UserProfile.objects.filter(email=forgetForm.email):
+                send_register_email(forgetForm.email, "forget")
+                return HttpResponse("邮件已发送, 请查收!")
+            else:
+                return render(request, "forgetpwd.html", context={
+                    "msg" : "用户不存在",
+                    "forget_form" : forgetForm
+                })
+        else:
+            return render(request, "forgetpwd.html", context={
+                "forget_form" : forgetForm
+            })
+
+
+class ResetView(View):
+    def get(self, request, active_code):
+        record = EmailVerifyRecord.objects.filter(code=active_code).first()
+        if record:
+            email = record.email
+            return render(request, "password_reset.html", context={
+                "email" : email
+            })
+        else:
+            return HttpResponse("无效链接或者链接已失效!")
+
+
+class ModifyPwdView(View):
+    def post(self, request):
+        modifyForm = ModifyPwdForm(request.POST)
+        if modifyForm.is_valid():
+            password = modifyForm.password
+            confirmPwd = modifyForm.password2
+            email = request.POST.get("email")
+            if password != confirmPwd:
+                return render(request, "password_reset.html", context={
+                    "msg" : "密码不一致!"
+                })
+            else:
+                user = UserProfile.objects.get(email=email)
+                user.password = make_password(password)
+                user.save()
+                return redirect("/login/")
+        else:
+            return render(request, "password_reset.html", context={
+                "modify_form" : modifyForm
+            })
+

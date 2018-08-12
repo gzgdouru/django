@@ -8,6 +8,9 @@ class City(models.Model):
     desc = models.TextField(verbose_name="描述")
     add_time = models.DateTimeField(auto_now_add=True, verbose_name="添加时间")
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         verbose_name = "城市"
         verbose_name_plural = verbose_name
@@ -22,6 +25,9 @@ class CourseOrg(models.Model):
     address = models.CharField(max_length=150, verbose_name="地址")
     city = models.ForeignKey(City, verbose_name="城市", on_delete=models.CASCADE)
     add_time = models.DateTimeField(auto_now_add=True, verbose_name="添加时间")
+
+    def __str__(self):
+        return self.name
 
     class Meta:
         verbose_name = "课程机构"
@@ -38,6 +44,9 @@ class Teacher(models.Model):
     click_nums = models.PositiveIntegerField(default=0, verbose_name="点击数")
     fav_nums = models.PositiveIntegerField(default=0, verbose_name="收藏数")
     add_time = models.DateTimeField(auto_now_add=True, verbose_name="添加时间")
+
+    def __str__(self):
+        return self.name
 
     class Meta:
         verbose_name = "教师"

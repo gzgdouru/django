@@ -17,6 +17,7 @@ import sys
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 sys.path.insert(0, os.path.join(BASE_DIR, "apps")) #将apps设为查找路径
+sys.path.insert(0, os.path.join(BASE_DIR, "extra_apps"))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -28,6 +29,11 @@ SECRET_KEY = 'tuzw**fx^k%ni3j&$ds+0cpf1)983ua$@)0$-0n4uuogsnq9eq'
 DEBUG = True
 
 ALLOWED_HOSTS = []
+
+#重写authenticate方法
+AUTHENTICATION_BACKENDS = [
+    "users.views.CustomBackend"
+]
 
 
 # Application definition
@@ -42,7 +48,10 @@ INSTALLED_APPS = [
     'users',
     'courses',
     'organization',
-    'operation'
+    'operation',
+    'xadmin',
+    'crispy_forms',
+    'captcha'
 ]
 
 AUTH_USER_MODEL = "users.UserProfile"
@@ -115,18 +124,31 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'zh-hans'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static")
+]
+
+#邮件配置
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = False   #是否使用TLS安全传输协议(用于在两个通信应用程序之间提供保密性和数据完整性。)
+EMAIL_USE_SSL = True    #是否使用SSL加密，qq企业邮箱要求使用
+EMAIL_HOST = 'smtp.163.com'   #发送邮件的邮箱 的 SMTP服务器，这里用了163邮箱
+EMAIL_PORT = 465     #发件箱的SMTP服务器端口
+EMAIL_HOST_USER = '18719091650@163.com'    #发送邮件的邮箱地址
+EMAIL_HOST_PASSWORD = 'qq5201314ouru'         #发送邮件的邮箱密码(这里使用的是授权码)
+DEFAULT_FROM_EMAIL = '18719091650@163.com'
