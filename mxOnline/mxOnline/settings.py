@@ -80,11 +80,11 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media',
             ],
         },
     },
 ]
-
 WSGI_APPLICATION = 'mxOnline.wsgi.application'
 
 
@@ -152,3 +152,7 @@ EMAIL_PORT = 465     #发件箱的SMTP服务器端口
 EMAIL_HOST_USER = '18719091650@163.com'    #发送邮件的邮箱地址
 EMAIL_HOST_PASSWORD = 'qq5201314ouru'         #发送邮件的邮箱密码(这里使用的是授权码)
 DEFAULT_FROM_EMAIL = '18719091650@163.com'
+
+#上传文件配置
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")

@@ -17,6 +17,8 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.views.generic import TemplateView
 import xadmin
+from django.views.static import serve
+from mxOnline.settings import MEDIA_ROOT
 
 from users.views import LoginView, RegisterView, ActiveView, ForgetPwdView, ResetView, ModifyPwdView
 from organization.views import OrgListView
@@ -34,4 +36,6 @@ urlpatterns = [
     url(r'^modify/$', ModifyPwdView.as_view(), name="modify_pwd"),
 
     url(r'^org_list/$', OrgListView.as_view(), name="org_list"),
+
+    url(r'^media/(?P<path>.*)$', serve, {"document_root":MEDIA_ROOT}),  #配置上传文件的访问处理函数
 ]
