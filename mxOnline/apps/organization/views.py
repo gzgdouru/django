@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponse
 from django.views.generic import View
 
 from .models import City, CourseOrg
+from .forms import UserAskForm
 
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 
@@ -53,3 +54,28 @@ class OrgListView(View):
             "hot_org" : hot_org,
             "sort" : sortby,
         })
+
+
+class AddUserAskView(View):
+    def post(self, request):
+        userAskForm = UserAskForm(request.POST)
+        if userAskForm.is_valid():
+            userAskForm.save(commit=True)
+            return HttpResponse('''{
+            "status" : "success"
+            }''', content_type="application/json")
+        else:
+            print(userAskForm.errors)
+            # if "name" in userAskForm.errors:
+            #     errMsg = "请输入正确的名字!"
+            # elif "mobile" in userAskForm.errors:
+            #     errMsg = "请输入正确的手机号码!"
+            # elif "course_name" in userAskForm.errors:
+            #     errMsg = "请输入正确的课程名!"
+            # else:
+            #     errMsg = "未知错误"
+
+            return HttpResponse('''{
+            "status" : "fail",
+            "msg" : "输入的信息错误!"
+            }''', content_type="application/json")
