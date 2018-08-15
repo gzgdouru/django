@@ -20,22 +20,17 @@ import xadmin
 from django.views.static import serve
 from mxOnline.settings import MEDIA_ROOT
 
-from users.views import LoginView, RegisterView, ActiveView, ForgetPwdView, ResetView, ModifyPwdView
-from organization.views import OrgListView
+from .views import IndexView
 
 urlpatterns = [
     url(r'^xadmin/', xadmin.site.urls),
 
-    url(r'^$', TemplateView.as_view(template_name="index.html"), name="index"),
-    url(r'^login/$', LoginView.as_view(), name="login"),
-    url(r'^register/$', RegisterView.as_view(), name="register"),
-    url(r'^captcha/', include('captcha.urls')),
-    url(r'^active/(?P<active_code>.*)/$', ActiveView.as_view(), name="active"),
-    url(r'^forget/$', ForgetPwdView.as_view(), name="forget_pwd"),
-    url(r'^reset/(?P<active_code>.*)/$', ResetView.as_view(), name="reset"),
-    url(r'^modify/$', ModifyPwdView.as_view(), name="modify_pwd"),
-
-    url(r'^org_list/$', OrgListView.as_view(), name="org_list"),
+    url(r'^$', IndexView.as_view(), name="index"), #首页
+    url(r'^users/', include("users.urls")),  #用户url
+    url(r'^org/', include("organization.urls")),    #机构url
 
     url(r'^media/(?P<path>.*)$', serve, {"document_root":MEDIA_ROOT}),  #配置上传文件的访问处理函数
+
+    #第三方处理url
+    url(r'^captcha/', include('captcha.urls')),
 ]

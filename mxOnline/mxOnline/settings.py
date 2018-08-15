@@ -149,9 +149,9 @@ EMAIL_USE_TLS = False   #是否使用TLS安全传输协议(用于在两个通信
 EMAIL_USE_SSL = True    #是否使用SSL加密，qq企业邮箱要求使用
 EMAIL_HOST = 'smtp.163.com'   #发送邮件的邮箱 的 SMTP服务器，这里用了163邮箱
 EMAIL_PORT = 465     #发件箱的SMTP服务器端口
-EMAIL_HOST_USER = '18719091650@163.com'    #发送邮件的邮箱地址
+EMAIL_HOST_USER = 'gzouru@163.com'    #发送邮件的邮箱地址
 EMAIL_HOST_PASSWORD = 'qq5201314ouru'         #发送邮件的邮箱密码(这里使用的是授权码)
-DEFAULT_FROM_EMAIL = '18719091650@163.com'
+DEFAULT_FROM_EMAIL = 'gzouru@163.com'
 
 #上传文件配置
 MEDIA_URL = "/media/"

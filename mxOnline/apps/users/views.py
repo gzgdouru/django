@@ -50,7 +50,7 @@ class RegisterView(View):
             send_register_email(userProfile.username, "register")
             userProfile.save()
 
-            return redirect("/login")
+            return redirect("/users/login/")
         else:
             return render(request, "register.html", context={
                 "register_form" : registerForm
@@ -68,7 +68,7 @@ class ActiveView(View):
                 user.save()
         else:
             return HttpResponse("无效链接或者链接已失效!")
-        return redirect("/login/")
+        return HttpResponse("用户激活成功, 请到登录页面进行登录.")
 
 
 class LoginView(View):
@@ -84,7 +84,7 @@ class LoginView(View):
             if user is not None:
                 if user.is_active:
                     login(request, user)
-                    return render(request, "index.html", context={})
+                    return redirect("/")
                 else:
                     return render(request, "login.html", context={
                         "msg" : "用户未激活"
@@ -109,8 +109,9 @@ class ForgetPwdView(View):
     def post(self, request):
         forgetForm = ForgetPwdForm(request.POST)
         if forgetForm.is_valid():
-            if UserProfile.objects.filter(email=forgetForm.email):
-                send_register_email(forgetForm.email, "forget")
+            email = request.POST.get("email")
+            if UserProfile.objects.filter(email=email):
+                send_register_email(email, "forget")
                 return HttpResponse("邮件已发送, 请查收!")
             else:
                 return render(request, "forgetpwd.html", context={
@@ -129,7 +130,7 @@ class ResetView(View):
         if record:
             email = record.email
             return render(request, "password_reset.html", context={
-                "email" : email
+                "email" : email,
             })
         else:
             return HttpResponse("无效链接或者链接已失效!")
@@ -139,8 +140,8 @@ class ModifyPwdView(View):
     def post(self, request):
         modifyForm = ModifyPwdForm(request.POST)
         if modifyForm.is_valid():
-            password = modifyForm.password
-            confirmPwd = modifyForm.password2
+            password = request.POST.get("password")
+            confirmPwd = request.POST.get("password2")
             email = request.POST.get("email")
             if password != confirmPwd:
                 return render(request, "password_reset.html", context={
@@ -150,7 +151,7 @@ class ModifyPwdView(View):
                 user = UserProfile.objects.get(email=email)
                 user.password = make_password(password)
                 user.save()
-                return redirect("/login/")
+                return redirect("/users/login/")
         else:
             return render(request, "password_reset.html", context={
                 "modify_form" : modifyForm
