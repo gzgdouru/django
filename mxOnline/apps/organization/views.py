@@ -1,8 +1,9 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, get_object_or_404
 from django.views.generic import View
 
 from .models import City, CourseOrg
 from .forms import UserAskForm
+from operation.models import UserFavorite
 
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 
@@ -79,3 +80,94 @@ class AddUserAskView(View):
             "status" : "fail",
             "msg" : "输入的信息错误!"
             }''', content_type="application/json")
+
+
+class OrgHomeView(View):
+    def get(self, request, org_id):
+        current_page = "home"
+        course_org = get_object_or_404(CourseOrg, pk=org_id)
+        all_course = course_org.course_set.all()[:4]
+        all_teacher = course_org.teacher_set.all()[:4]
+
+        has_fav = False
+        if request.user.is_authenticated and UserFavorite.objects.filter(fav_id=course_org.id, fav_type=2):
+            has_fav = True
+
+        return render(request, "org-detail-homepage.html", context={
+            "all_course" : all_course,
+            "all_teacher" : all_teacher,
+            "course_org" : course_org,
+            "current_page" : current_page,
+            "has_fav" : has_fav,
+        })
+
+
+class OrgCourseView(View):
+    def get(self, request, org_id):
+        current_page = "course"
+        course_org = get_object_or_404(CourseOrg, pk=org_id)
+        all_course = course_org.course_set.all()
+
+        has_fav = False
+        if request.user.is_authenticated and UserFavorite.objects.filter(fav_id=course_org.id, fav_type=2):
+            has_fav = True
+
+        return render(request, "org-detail-course.html", context={
+            "all_course" : all_course,
+            "course_org" : course_org,
+            "current_page": current_page,
+            "has_fav" : has_fav,
+        })
+
+
+class OrgDescView(View):
+    def get(self, request, org_id):
+        current_page = "desc"
+        course_org = get_object_or_404(CourseOrg, pk=org_id)
+
+        has_fav = False
+        if request.user.is_authenticated and UserFavorite.objects.filter(fav_id=course_org.id, fav_type=2):
+            has_fav = True
+
+        return render(request, "org-detail-desc.html", context={
+            "course_org" : course_org,
+            "current_page" : current_page,
+            "has_fav" : has_fav,
+        })
+
+class OrgTeacherView(View):
+    def get(self, request, org_id):
+        current_page = "teacher"
+        course_org = get_object_or_404(CourseOrg, pk=org_id)
+        all_teacher = course_org.teacher_set.all()
+
+        has_fav = False
+        if request.user.is_authenticated and UserFavorite.objects.filter(fav_id=course_org.id, fav_type=2):
+            has_fav = True
+
+        return render(request, "org-detail-teachers.html", context={
+            "all_teacher" : all_teacher,
+            "course_org" : course_org,
+            "current_page" : current_page,
+            "has_fav" : has_fav,
+        })
+
+class AddFavView(View):
+    def post(self, request):
+        if not request.user.is_authenticated:
+            return HttpResponse('{"status":"fail", "msg":"用户未登录"}', content_type='application/json')
+
+        fav_id = int(request.POST.get("fav_id", 0))
+        fav_type = int(request.POST.get("fav_type", 0))
+
+        fav_record = UserFavorite.objects.filter(fav_id=fav_id, fav_type=fav_type)
+        if fav_record:
+            fav_record.delete()
+            return HttpResponse('{"status":"success", "msg":"收藏"}', content_type='application/json')
+        else:
+            if fav_id > 0 and fav_type > 0:
+                UserFavorite(user=request.user, fav_id=fav_id, fav_type=fav_type).save()
+                return HttpResponse('{"status":"success", "msg":"已收藏"}', content_type='application/json')
+            else:
+                return HttpResponse('{"status":"success", "msg":"收藏出错, 数据错误!"}', content_type='application/json')
+
