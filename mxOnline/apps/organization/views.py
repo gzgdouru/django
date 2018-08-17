@@ -41,10 +41,11 @@ class OrgListView(View):
                 all_org = all_org.order_by("-course_nums")
 
         p = Paginator(all_org, 5, request=request)
-
         orgs = p.page(page)
 
-        org_nums = all_org.count()
+        org_nums = all_org.count()  #机构数量
+
+        current_page = "course_org"
 
         return render(request, "org-list.html", context={
             "all_city" : all_city,
@@ -54,6 +55,7 @@ class OrgListView(View):
             "category" : category,
             "hot_org" : hot_org,
             "sort" : sortby,
+            "current_page" : current_page,
         })
 
 

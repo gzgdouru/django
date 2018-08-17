@@ -19,6 +19,7 @@ class UserProfile(AbstractUser):
     def __str__(self):
         return self.username
 
+
 class EmailVerifyRecord(models.Model):
     code = models.CharField(max_length=20, verbose_name="验证码")
     email = models.EmailField(max_length=50, verbose_name="邮箱")
@@ -31,6 +32,7 @@ class EmailVerifyRecord(models.Model):
     class Meta:
         verbose_name = "邮箱验证码"
         verbose_name_plural = verbose_name
+
 
 class Banner(models.Model):
     title = models.CharField(max_length=100, verbose_name="标题")

@@ -20,14 +20,22 @@ import xadmin
 from django.views.static import serve
 from mxOnline.settings import MEDIA_ROOT
 
-from .views import IndexView
+from users.views import LoginView, RegisterView, ActiveView, ForgetPwdView, ResetView, \
+    ModifyPwdView, IndexView
 
 urlpatterns = [
     url(r'^xadmin/', xadmin.site.urls),
 
     url(r'^$', IndexView.as_view(), name="index"), #首页
-    url(r'^users/', include("users.urls")),  #用户url
+    url(r'^login/$', LoginView.as_view(), name="login"),
+    url(r'^register/$', RegisterView.as_view(), name="register"),
+    url(r'^active/(?P<active_code>.*)/$', ActiveView.as_view(), name="active"),
+    url(r'^forget/$', ForgetPwdView.as_view(), name="forget_pwd"),
+    url(r'^reset/(?P<active_code>.*)/$', ResetView.as_view(), name="reset_pwd"),
+    url(r'^modify/$', ModifyPwdView.as_view(), name="modify_pwd"),
+
     url(r'^org/', include("organization.urls")),    #机构url
+    url(r'^course/', include("courses.urls")), #课程url
 
     url(r'^media/(?P<path>.*)$', serve, {"document_root":MEDIA_ROOT}),  #配置上传文件的访问处理函数
 

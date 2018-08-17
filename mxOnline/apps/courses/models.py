@@ -15,8 +15,11 @@ class Course(models.Model):
     learn_times = models.PositiveIntegerField(default=0, verbose_name="学习时长(分钟数)")
     students = models.PositiveIntegerField(default=0, verbose_name="学习人数")
     fav_nums = models.PositiveIntegerField(default=0, verbose_name="收藏人数")
-    image = models.ImageField(upload_to="courses/%Y/%m", verbose_name="封面", max_length=100)
+    image = models.ImageField(upload_to="courses/%Y/%m", verbose_name="封面", max_length=100, null=True, blank=True)
     click_nums = models.PositiveIntegerField(default=0, verbose_name="点击数")
+    tag = models.CharField(max_length=50, default="" , verbose_name="课程标签")
+    course_needknow = models.CharField(max_length=100, default="", verbose_name="课程须知")
+    teacher_tell = models.CharField(max_length=100, default="", verbose_name="老师告诉你能学到什么")
     add_time = models.DateTimeField(auto_now_add=True, verbose_name="添加时间")
 
     def __str__(self):
@@ -43,6 +46,7 @@ class Lesson(models.Model):
 class Video(models.Model):
     lesson = models.ForeignKey(Lesson, verbose_name="章节", on_delete=models.CASCADE)
     name = models.CharField(max_length=100, verbose_name="视频名称")
+    url = models.URLField(default="", verbose_name="视频链接")
     add_time = models.DateTimeField(auto_now_add=True, verbose_name="添加时间")
 
     def __str__(self):

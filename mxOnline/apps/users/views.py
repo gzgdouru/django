@@ -6,11 +6,13 @@ from django.db.models import Q
 from django.views.generic import View
 from django.contrib.auth.hashers import make_password
 
-from .models import UserProfile, EmailVerifyRecord
+from .models import UserProfile, EmailVerifyRecord, Banner
 from .forms import LoginForm, RegisterForm, ForgetPwdForm, ModifyPwdForm
 from untis.email_send import send_register_email
+from organization.models import CourseOrg
+from courses.models import Course
 
-
+#重写authenticate认证方法
 class CustomBackend(ModelBackend):
     def authenticate(self, request, username=None, password=None, **kwargs):
         try:
@@ -25,6 +27,24 @@ class CustomBackend(ModelBackend):
 # Create your views here.
 
 
+#慕学在线网首页视图
+class IndexView(View):
+    def get(self, request):
+        orgs = CourseOrg.objects.all().order_by("-click_nums")[:15]
+        banners = Banner.objects.all().order_by("index")[:5]
+        courses = Course.objects.all().order_by("-click_nums")[:6]
+
+        current_page = "home"
+
+        return render(request, "index.html", context={
+            "orgs" : orgs,
+            "banners" : banners,
+            "current_page" : current_page,
+            "courses" : courses,
+        })
+
+
+#用户注册视图
 class RegisterView(View):
     def get(self, request):
         registerForm = RegisterForm()
@@ -50,13 +70,14 @@ class RegisterView(View):
             send_register_email(userProfile.username, "register")
             userProfile.save()
 
-            return redirect("/users/login/")
+            return redirect("/login/")
         else:
             return render(request, "register.html", context={
                 "register_form" : registerForm
             })
 
 
+#用户激活视图
 class ActiveView(View):
     def get(self, request, active_code):
         all_records = EmailVerifyRecord.objects.filter(code=active_code)
@@ -71,6 +92,7 @@ class ActiveView(View):
         return HttpResponse("用户激活成功, 请到登录页面进行登录.")
 
 
+#用户登录视图
 class LoginView(View):
     def get(self, request):
         return render(request, "login.html", context={})
@@ -87,10 +109,12 @@ class LoginView(View):
                     return redirect("/")
                 else:
                     return render(request, "login.html", context={
+                        "login_form": loginForm,
                         "msg" : "用户未激活"
                     })
             else:
                 return render(request, "login.html", context={
+                    "login_form": loginForm,
                     "msg" : "用户或密码错误!"
                 })
         else:
@@ -99,6 +123,7 @@ class LoginView(View):
             })
 
 
+#忘记密码视图
 class ForgetPwdView(View):
     def get(self, request):
         forgetForm = ForgetPwdForm()
@@ -124,6 +149,7 @@ class ForgetPwdView(View):
             })
 
 
+#重置密码视图
 class ResetView(View):
     def get(self, request, active_code):
         record = EmailVerifyRecord.objects.filter(code=active_code).first()
@@ -136,6 +162,7 @@ class ResetView(View):
             return HttpResponse("无效链接或者链接已失效!")
 
 
+#修改密码视图
 class ModifyPwdView(View):
     def post(self, request):
         modifyForm = ModifyPwdForm(request.POST)
@@ -151,7 +178,7 @@ class ModifyPwdView(View):
                 user = UserProfile.objects.get(email=email)
                 user.password = make_password(password)
                 user.save()
-                return redirect("/users/login/")
+                return redirect("/login/")
         else:
             return render(request, "password_reset.html", context={
                 "modify_form" : modifyForm
