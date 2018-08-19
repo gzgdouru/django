@@ -120,7 +120,7 @@
                 if (data.status == 'fail') {
                     if (data.msg == '用户未登录') {
                         alert(data.msg)
-                        window.location.href = "{% url 'users:login' %}";
+                        window.location.href = "{% url 'login' %}";
                     } else {
                         alert(data.msg)
                     }

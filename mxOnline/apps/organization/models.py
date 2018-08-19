@@ -47,6 +47,7 @@ class Teacher(models.Model):
     click_nums = models.PositiveIntegerField(default=0, verbose_name="点击数")
     fav_nums = models.PositiveIntegerField(default=0, verbose_name="收藏数")
     image = models.ImageField(upload_to="teacher/%Y/%m", verbose_name="教师图片", max_length=200, default="")
+    age = models.PositiveIntegerField(default=0, null=True, blank=True, verbose_name="讲师年龄")
     add_time = models.DateTimeField(auto_now_add=True, verbose_name="添加时间")
 
     def __str__(self):

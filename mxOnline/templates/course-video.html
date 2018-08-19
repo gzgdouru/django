@@ -56,7 +56,7 @@
                             <ul class="course-menu clearfix">
                                 <li><a class="ui-tabs-active active" id="learnOn"
                                        href="{% url 'course:course_info' course.id %}"><span>章节</span></a></li>
-                                <li><a id="commentOn" class="" href="course-comment.html"><span>评论</span></a></li>
+                                <li><a id="commentOn" class="" href="{% url 'course:course_comment' course.id %}"><span>评论</span></a></li>
                             </ul>
                         </div>
                         <div id="notice" class="clearfix">
@@ -73,7 +73,7 @@
                                     <ul class="video">
                                         {% for video in lesson.video_set.all %}
                                             <li>
-                                                <a target="_blank" href="{{ video.url }}" class="J-media-item studyvideo">
+                                                <a target="_blank" href="{% url 'course:video_play' video.id %}" class="J-media-item studyvideo">
                                                     {{ video.name }}
                                                     <i class="study-state"></i>
                                                 </a>

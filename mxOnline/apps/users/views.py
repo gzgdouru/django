@@ -5,10 +5,13 @@ from django.contrib.auth.backends import ModelBackend
 from django.db.models import Q
 from django.views.generic import View
 from django.contrib.auth.hashers import make_password
+import json
 
 from .models import UserProfile, EmailVerifyRecord, Banner
 from .forms import LoginForm, RegisterForm, ForgetPwdForm, ModifyPwdForm
+from .forms import ImageUploadForm
 from untis.email_send import send_register_email
+from untis.mixin_utils import LoginRequiredMixin
 from organization.models import CourseOrg
 from courses.models import Course
 
@@ -34,12 +37,9 @@ class IndexView(View):
         banners = Banner.objects.all().order_by("index")[:5]
         courses = Course.objects.all().order_by("-click_nums")[:6]
 
-        current_page = "home"
-
         return render(request, "index.html", context={
             "orgs" : orgs,
             "banners" : banners,
-            "current_page" : current_page,
             "courses" : courses,
         })
 
@@ -183,4 +183,47 @@ class ModifyPwdView(View):
             return render(request, "password_reset.html", context={
                 "modify_form" : modifyForm
             })
+
+
+class UserInfoView(LoginRequiredMixin, View):
+    '''
+    用户信息中心
+    '''
+    def get(self, request):
+        return  render(request, "usercenter-info.html", context={})
+
+
+class ImageUploadView(LoginRequiredMixin, View):
+    '''
+    头像上传
+    '''
+    def post(self, request):
+        imageUploadForm = ImageUploadForm(request.POST, request.FILES, instance=request.user)
+        if imageUploadForm.is_valid():
+            imageUploadForm.save()
+            return HttpResponse('{"status":"success"}', content_type='application/json')
+        else:
+            return HttpResponse('{"status":"fail"}', content_type='application/json')
+
+
+class UpdatePwdView(LoginRequiredMixin, View):
+    '''
+    个人中心修改密码
+    '''
+    def post(self, request):
+        modifyForm = ModifyPwdForm(request.POST)
+        if modifyForm.is_valid():
+            password1 = request.POST.get("password")
+            password2 = request.POST.get("password2")
+            if password1 != password2:
+                return HttpResponse('{"status":"fail", "msg":"密码不一致"}', content_type='application/json')
+            else:
+                user = request.user
+                user.password = make_password(password1)
+                user.save()
+                return HttpResponse('{"status":"success"}', content_type='application/json')
+        else:
+            return HttpResponse(json.dumps(modifyForm.errors))
+
+
 

@@ -1,4 +1,7 @@
 from django import forms
+
+from .models import UserProfile
+
 from captcha.fields import CaptchaField
 
 
@@ -25,3 +28,9 @@ class ForgetPwdForm(forms.Form):
 class ModifyPwdForm(forms.Form):
     password = forms.CharField(required=True, min_length=6, max_length=20)
     password2 = forms.CharField(required=True, min_length=6, max_length=20)
+
+
+class ImageUploadForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ["image"]

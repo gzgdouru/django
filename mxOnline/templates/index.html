@@ -3,6 +3,12 @@
 
 {% block title %}首页 - 慕学在线网{% endblock %}
 
+{% block custom_bread %}{% endblock %}
+
+{% block custom_js %}
+     <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
+{% endblock %}
+
 {% block content %}
     <!--banner start-->
     <div class="banner">
@@ -143,23 +149,4 @@
             </div>
         </div>
     </section>
-
-    <section>
-        <ul class="sidebar">
-            <li class="qq">
-                <a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin=2023525077&site=qq&menu=yes"></a>
-            </li>
-            <li class="totop"></li>
-        </ul>
-    </section>
-    <script src="{% static 'js/selectUi.js' %}" type='text/javascript'></script>
-    <script src="{% static 'js/deco-common.js' %}" type='text/javascript'></script>
-    <script type="text/javascript" src="{% static 'js/plugins/laydate/laydate.js' %}"></script>
-    <script src="{% static 'js/plugins/layer/layer.js' %}"></script>
-    <script src="{% static 'js/plugins/queryCity/js/public.js' %}" type="text/javascript"></script>
-    <script src="{% static 'js/unslider.js" type="text/javascript' %}"></script>
-    <script src="{% static 'js/plugins/jquery.scrollLoading.js' %}" type="text/javascript"></script>
-    <script src="{% static 'js/deco-common.js' %}" type="text/javascript"></script>
-
-    <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
 {% endblock %}

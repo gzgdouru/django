@@ -34,10 +34,17 @@ urlpatterns = [
     url(r'^reset/(?P<active_code>.*)/$', ResetView.as_view(), name="reset_pwd"),
     url(r'^modify/$', ModifyPwdView.as_view(), name="modify_pwd"),
 
-    url(r'^org/', include("organization.urls")),    #机构url
-    url(r'^course/', include("courses.urls")), #课程url
+    #课程机构相关url配置
+    url(r'^org/', include("organization.urls")),
 
-    url(r'^media/(?P<path>.*)$', serve, {"document_root":MEDIA_ROOT}),  #配置上传文件的访问处理函数
+    #公开课相关url配置
+    url(r'^course/', include("courses.urls")),
+
+    #用户个人中心url配置
+    url(r'^users/', include("users.urls")),
+
+    #配置上传文件的访问处理函数
+    url(r'^media/(?P<path>.*)$', serve, {"document_root":MEDIA_ROOT}),
 
     #第三方处理url
     url(r'^captcha/', include('captcha.urls')),
