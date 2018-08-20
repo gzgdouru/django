@@ -55,7 +55,7 @@ class UserMessage(models.Model):
     add_time = models.DateTimeField(auto_now_add=True, verbose_name="添加时间")
 
     def __str__(self):
-        return self.user.username
+        return self.message
 
     class Meta:
         verbose_name = "用户消息"

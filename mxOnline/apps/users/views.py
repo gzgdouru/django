@@ -9,11 +9,14 @@ import json
 
 from .models import UserProfile, EmailVerifyRecord, Banner
 from .forms import LoginForm, RegisterForm, ForgetPwdForm, ModifyPwdForm
-from .forms import ImageUploadForm
+from .forms import ImageUploadForm, UserInfoForm
 from untis.email_send import send_register_email
 from untis.mixin_utils import LoginRequiredMixin
-from organization.models import CourseOrg
+from organization.models import CourseOrg, Teacher
 from courses.models import Course
+from operation.models import UserCourse, UserFavorite, UserMessage
+
+from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 
 #重写authenticate认证方法
 class CustomBackend(ModelBackend):
@@ -192,6 +195,14 @@ class UserInfoView(LoginRequiredMixin, View):
     def get(self, request):
         return  render(request, "usercenter-info.html", context={})
 
+    def post(self, request):
+        userinfoForm = UserInfoForm(request.POST, instance=request.user)
+        if userinfoForm.is_valid():
+            userinfoForm.save()
+            return HttpResponse('{"status":"success"}', content_type="application/json")
+        else:
+            return HttpResponse(json.dumps(userinfoForm.errors), content_type='application/json')
+
 
 class ImageUploadView(LoginRequiredMixin, View):
     '''
@@ -226,4 +237,105 @@ class UpdatePwdView(LoginRequiredMixin, View):
             return HttpResponse(json.dumps(modifyForm.errors))
 
 
+class SendEmailCodeView(LoginRequiredMixin, View):
+    '''
+    发送邮箱验证码
+    '''
+    def get(self, request):
+        email = request.GET.get("email", "")
+
+        if not email:
+            return HttpResponse('{"email":"邮箱不能为空"}', content_type="application/json")
+
+        if UserProfile.objects.filter(email=email):
+            return HttpResponse('{"email":"邮箱已存在"}', content_type="application/json")
+        send_register_email(email, "update_email")
+        return HttpResponse('{"status":"success"}', content_type="application/json")
+
+
+class UpdateEmailView(View):
+    '''
+    个人邮箱修改
+    '''
+    def post(self, request):
+        email = request.POST.get("email", "")
+        code = request.POST.get("code", "")
+
+        if EmailVerifyRecord.objects.filter(email=email, code=code, send_type="update_email"):
+            request.user.email = email
+            request.user.save()
+            return HttpResponse('{"status":"success"}', content_type="application/json")
+
+        return HttpResponse('{"email":"验证码错误"}', content_type="application/json")
+
+
+class MyCourseView(LoginRequiredMixin, View):
+    '''
+    我的课程
+    '''
+    def get(self, request):
+        all_userCourse = UserCourse.objects.filter(user=request.user)
+        courses = [userCourse.course for userCourse in all_userCourse]
+        return render(request, "usercenter-mycourse.html", context={
+            "courses" : courses,
+        })
+
+
+class MyFavOrgView(LoginRequiredMixin, View):
+    '''
+    我的收藏 - 课程机构
+    '''
+    def get(self, request):
+        all_favs = UserFavorite.objects.filter(user=request.user, fav_type=2)
+        fav_ids = [fav.fav_id for fav in all_favs]
+        course_orgs = CourseOrg.objects.filter(id__in=fav_ids)
+        return render(request, "usercenter-fav-org.html", context={
+            "orgs" : course_orgs,
+        })
+
+
+class MyFavCourseView(LoginRequiredMixin, View):
+    '''
+    我的收藏 - 公开课
+    '''
+    def get(self, request):
+        all_favs = UserFavorite.objects.filter(user=request.user, fav_type=1)
+        fav_ids = [fav.fav_id for fav in all_favs]
+        courses = Course.objects.filter(id__in=fav_ids)
+        return render(request, "usercenter-fav-course.html", context={
+            "courses" : courses,
+        })
+
+
+class MyFavTeacherView(LoginRequiredMixin, View):
+    '''
+    我的收藏 - 授课讲师
+    '''
+    def get(self, request):
+        all_favs = UserFavorite.objects.filter(user=request.user, fav_type=3)
+        fav_ids = [fav.fav_id for fav in all_favs]
+        teachers = Teacher.objects.filter(id__in=fav_ids)
+        return render(request, "usercenter-fav-teacher.html", context={
+            "teachers" : teachers,
+        })
+
+
+class MyMessageView(LoginRequiredMixin, View):
+    '''
+    我的消息
+    '''
+    def get(self, request):
+        all_messages = UserMessage.objects.filter(user=request.user.id)
+
+        #分页
+        try:
+            page = request.GET.get('page', 1)
+        except PageNotAnInteger:
+            page = 1
+        p = Paginator(all_messages, 10, request=request)
+        messages = p.page(page)
+
+        return render(request, "usercenter-message.html", context={
+            "messages" : messages,
+        })
 

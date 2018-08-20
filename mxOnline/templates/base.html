@@ -43,7 +43,7 @@
                                         <dt><img width="80" height="80"
                                                  src="{{ MEDIA_URL }}{{ request.user.image }}"/></dt>
                                         <dd>
-                                            <h2>django</h2>
+                                            <h2>{{ request.user.nick_name }}</h2>
                                             <p>{{ request.user.username }}</p>
                                         </dd>
                                     </dl>
