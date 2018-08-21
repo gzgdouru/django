@@ -1,16 +1,9 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
-{% block title %}首页 - 慕学在线网{% endblock %}
-
-{% block custom_bread %}{% endblock %}
-
-{% block custom_js %}
-     <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
-{% endblock %}
+{% block title %}课程机构列表 - 慕学在线网{% endblock %}
 
 {% block content %}
-    <!--banner start-->
     <div class="banner">
         <div class="wp">
             <div class="fl">
@@ -19,7 +12,7 @@
                         {% for banner in banners %}
                             <li>
                                 <a href="{{ banner.url }}">
-                                    <img width="1200" height="478" title="{{ banner.title }}"
+                                    <img width="1200" height="478"
                                          src="{{ MEDIA_URL }}{{ banner.image }}"/>
                                 </a>
                             </li>
@@ -29,10 +22,12 @@
                 <div class="unslider-arrow prev"></div>
                 <div class="unslider-arrow next"></div>
             </div>
+
         </div>
+
+
     </div>
     <!--banner end-->
-
     <!--feature start-->
     <section>
         <div class="wp">
@@ -66,47 +61,39 @@
                     <div class="module1_1 left">
                         <img width="228" height="614" src="{% static 'images/module1_1.jpg' %}"/>
                         <p class="fisrt_word">名师授课<br/>专业权威</p>
-                        <a class="more" href="course-list.html">查看更多课程 ></a>
+                        <a class="more" href="{% url 'course:course_list' %}">查看更多课程 ></a>
                     </div>
                     <div class="right group_list">
                         <div class="module1_2 box">
                             <div class="imgslide2">
                                 <ul class="imgs">
-
-                                    <li>
-                                        <a href="course-detail.html">
-                                            <img width="470" height="300"
-                                                 src="../media/courses/2016/12/python文件处理.jpg"/>
-                                        </a>
-                                    </li>
-
-                                    <li>
-                                        <a href="course-detail.html">
-                                            <img width="470" height="300"
-                                                 src="../media/courses/2016/12/python面向对象.jpg"/>
-                                        </a>
-                                    </li>
-
+                                    {% for banner_course in banner_courses %}
+                                        <li>
+                                            <a href="{% url 'course:course_detail' banner_course.id %}">
+                                                <img width="470" height="300"
+                                                     src="{{ MEDIA_URL }}{{ banner_course.image }}"/>
+                                            </a>
+                                        </li>
+                                    {% endfor %}
                                 </ul>
                             </div>
                             <div class="unslider-arrow2 prev"></div>
                             <div class="unslider-arrow2 next"></div>
                         </div>
-
                         {% for course in courses %}
-                            <div class="module1_3 box">
+                            <div class="module1_{{ forloop.counter|add:2 }} box">
                                 <a href="{% url 'course:course_detail' course.id %}">
                                     <img width="233" height="190" src="{{ MEDIA_URL }}{{ course.image }}"/>
                                 </a>
                                 <div class="des">
                                     <a href="{% url 'course:course_detail' course.id %}">
-                                        <h2 title="django入门">{{ course.name }}</h2>
+                                        <h2 title="{{ course.name }}">{{ course.name }}</h2>
                                     </a>
                                     <span class="fl">难度：<i class="key">{{ course.get_degree_display }}</i></span>
                                     <span class="fr">学习人数：{{ course.students }}</span>
                                 </div>
                                 <div class="bottom">
-                                    <span class="fl" title="{{ course.course_org.name }}">{{ course.course_org.name }}</span>
+                                    <span class="fl" title="慕课网">{{ course.course_org.name }}</span>
                                     <span class="star fr">{{ course.fav_nums }}</span>
                                 </div>
                             </div>
@@ -129,19 +116,19 @@
                     <div class="right">
                         <ul>
                             {% for org in orgs %}
-                                <li class="{% if not forloop.counter|divisibleby:5 %}five{% endif %}">
-                                    <a href="org-detail-homepage.html">
-                                        <div class="company">
-                                            <img width="184" height="100" src="{{ MEDIA_URL }}{{ org.image }}"/>
-                                            <div class="score">
-                                                <div class="circle">
-                                                    <h2>全国知名</h2>
-                                                </div>
+                                 <li class="{% if forloop.counter|divisibleby:5 %}five{% endif %}">
+                                <a href="{% url 'org:org_home' org.id %}">
+                                    <div class="company">
+                                        <img width="184" height="100" src="{{ MEDIA_URL }}{{ org.image }}"/>
+                                        <div class="score">
+                                            <div class="circle">
+                                                <h2>{{ org.tag }}</h2>
                                             </div>
                                         </div>
-                                        <p><span class="key" title="{{ org.name }}">{{ org.name }}</span></p>
-                                    </a>
-                                </li>
+                                    </div>
+                                    <p><span class="key" title="{{ org.name }}">{{ org.name }}</span></p>
+                                </a>
+                            </li>
                             {% endfor %}
                         </ul>
                     </div>
@@ -149,4 +136,10 @@
             </div>
         </div>
     </section>
+{% endblock %}
+
+{% block custom_bread %}{% endblock %}
+
+{% block custom_js %}
+    <script type="text/javascript" src="{% static 'js/index.js' %}"></script>
 {% endblock %}

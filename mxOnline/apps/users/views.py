@@ -1,6 +1,6 @@
-from django.shortcuts import render, redirect, HttpResponse
+from django.shortcuts import render, redirect, HttpResponse, reverse, render_to_response
 from django.contrib.auth import authenticate
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib.auth.backends import ModelBackend
 from django.db.models import Q
 from django.views.generic import View
@@ -33,22 +33,28 @@ class CustomBackend(ModelBackend):
 # Create your views here.
 
 
-#慕学在线网首页视图
 class IndexView(View):
+    '''
+    慕学在线网首页
+    '''
     def get(self, request):
         orgs = CourseOrg.objects.all().order_by("-click_nums")[:15]
         banners = Banner.objects.all().order_by("index")[:5]
         courses = Course.objects.all().order_by("-click_nums")[:6]
+        banner_courses = Course.objects.filter(is_banner=True)[:3]
 
         return render(request, "index.html", context={
             "orgs" : orgs,
             "banners" : banners,
             "courses" : courses,
+            "banner_courses" : banner_courses,
         })
 
 
-#用户注册视图
 class RegisterView(View):
+    '''
+    用户注册
+    '''
     def get(self, request):
         registerForm = RegisterForm()
         return render(request, "register.html", context={
@@ -70,6 +76,9 @@ class RegisterView(View):
             userProfile.password = make_password(request.POST.get("password"))
             userProfile.is_active = False
 
+            #写入欢迎注册消息
+            UserMessage(user=userProfile.id, message="欢迎注册慕学在线网", has_read=False).save()
+
             send_register_email(userProfile.username, "register")
             userProfile.save()
 
@@ -80,8 +89,11 @@ class RegisterView(View):
             })
 
 
-#用户激活视图
+
 class ActiveView(View):
+    '''
+    激活用户
+    '''
     def get(self, request, active_code):
         all_records = EmailVerifyRecord.objects.filter(code=active_code)
         if all_records:
@@ -95,8 +107,11 @@ class ActiveView(View):
         return HttpResponse("用户激活成功, 请到登录页面进行登录.")
 
 
-#用户登录视图
+
 class LoginView(View):
+    '''
+    用户登录
+    '''
     def get(self, request):
         return render(request, "login.html", context={})
 
@@ -126,8 +141,19 @@ class LoginView(View):
             })
 
 
-#忘记密码视图
+class LogoutView(LoginRequiredMixin, View):
+    '''
+    用户登出
+    '''
+    def get(self, request):
+        logout(request)
+        return redirect(reverse("index"))
+
+
 class ForgetPwdView(View):
+    '''
+    忘记密码
+    '''
     def get(self, request):
         forgetForm = ForgetPwdForm()
         return render(request, "forgetpwd.html", context={
@@ -152,8 +178,11 @@ class ForgetPwdView(View):
             })
 
 
-#重置密码视图
+
 class ResetView(View):
+    '''
+    重置密码
+    '''
     def get(self, request, active_code):
         record = EmailVerifyRecord.objects.filter(code=active_code).first()
         if record:
@@ -165,8 +194,11 @@ class ResetView(View):
             return HttpResponse("无效链接或者链接已失效!")
 
 
-#修改密码视图
+
 class ModifyPwdView(View):
+    '''
+    修改密码
+    '''
     def post(self, request):
         modifyForm = ModifyPwdForm(request.POST)
         if modifyForm.is_valid():
@@ -327,6 +359,12 @@ class MyMessageView(LoginRequiredMixin, View):
     def get(self, request):
         all_messages = UserMessage.objects.filter(user=request.user.id)
 
+        #将用户消息设为已读
+        userMessages = UserMessage.objects.filter(user=request.user.id, has_read=False)
+        for userMsg in userMessages:
+            userMsg.has_read = True
+            userMsg.save()
+
         #分页
         try:
             page = request.GET.get('page', 1)
@@ -339,3 +377,20 @@ class MyMessageView(LoginRequiredMixin, View):
             "messages" : messages,
         })
 
+
+def page_not_found(request):
+    '''
+    全局404处理函数
+    '''
+    response = render_to_response("404.html", context={})
+    response.status_code = 404
+    return response
+
+
+def page_error(request):
+    '''
+    全局500处理函数
+    '''
+    response = render_to_response("500.html", context={})
+    response.status_code = 500
+    return response

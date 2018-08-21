@@ -5,6 +5,7 @@ from django.db.models import Q
 from .models import City, CourseOrg, Teacher
 from .forms import UserAskForm
 from operation.models import UserFavorite
+from courses.models import Course
 
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 
@@ -90,6 +91,9 @@ class AddUserAskView(View):
 
 
 class OrgHomeView(View):
+    '''
+    机构首页
+    '''
     def get(self, request, org_id):
         current_page = "home"
         course_org = get_object_or_404(CourseOrg, pk=org_id)
@@ -173,13 +177,46 @@ class AddFavView(View):
         fav_record = UserFavorite.objects.filter(fav_id=fav_id, fav_type=fav_type)
         if fav_record:
             fav_record.delete()
+            self.remove_fav_nums(fav_id, fav_type)
             return HttpResponse('{"status":"success", "msg":"收藏"}', content_type='application/json')
         else:
-            if fav_id > 0 and fav_type > 0:
+            if fav_id and fav_type:
                 UserFavorite(user=request.user, fav_id=fav_id, fav_type=fav_type).save()
+                self.add_fav_nums(fav_id, fav_type)
                 return HttpResponse('{"status":"success", "msg":"已收藏"}', content_type='application/json')
             else:
                 return HttpResponse('{"status":"success", "msg":"收藏出错, 数据错误!"}', content_type='application/json')
+
+    def remove_fav_nums(self, favId, favType):
+        if favType == 1:
+            course = get_object_or_404(Course, pk=favId)
+            if course.fav_nums > 0:
+                course.fav_nums -= 1
+            course.save()
+        elif favType == 2:
+            courseOrg = get_object_or_404(CourseOrg, pk=favId)
+            if courseOrg.fav_nums > 0:
+                courseOrg.fav_nums -= 1
+            courseOrg.save()
+        elif favType == 3:
+            teacher = get_object_or_404(Teacher, pk=favId)
+            if teacher.fav_nums > 0:
+                teacher.fav_nums -= 1
+            teacher.save()
+
+    def add_fav_nums(self, favId, favType):
+        if favType == 1:
+            course = get_object_or_404(Course, pk=favId)
+            course.fav_nums += 1
+            course.save()
+        elif favType == 2:
+            courseOrg = get_object_or_404(CourseOrg, pk=favId)
+            courseOrg.fav_nums += 1
+            courseOrg.save()
+        elif favType == 3:
+            teacher = get_object_or_404(Teacher, pk=favId)
+            teacher.fav_nums += 1
+            teacher.save()
 
 
 #讲师列表页

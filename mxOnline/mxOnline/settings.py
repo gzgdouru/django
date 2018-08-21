@@ -28,7 +28,7 @@ SECRET_KEY = 'tuzw**fx^k%ni3j&$ds+0cpf1)983ua$@)0$-0n4uuogsnq9eq'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 #重写authenticate方法
 AUTHENTICATION_BACKENDS = [
@@ -142,6 +142,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static")
 ]
+
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 #邮件配置
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

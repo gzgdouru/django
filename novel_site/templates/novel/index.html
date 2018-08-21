@@ -5,10 +5,12 @@
 {% endblock %}
 
 {% block main %}
-    <h3>小说列表:</h3>
-    {% for novel in novels %}
-        <p><a href="{% url 'novel:novel_detail' novel.id %}">{{ novel.novel_name }}</a></p>
-        {% empty %}
-        暂无小说
-    {% endfor %}
+    <h3 class="">小说列表:</h3>
+    <div class="row">
+        {% for novel in novels %}
+            <div class="col-md-3">
+                <p><a href="{% url 'novel:novel_detail' novel.id %}">{{ novel.novel_name }}</a></p>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

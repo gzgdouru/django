@@ -41,7 +41,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'django.middleware.cache.UpdateCacheMiddleware',    # 缓存, 必须在最前面
+    # 'django.middleware.cache.UpdateCacheMiddleware',    # 缓存, 必须在最前面
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -49,7 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware', # 缓存, 必须在最后面
+    # 'django.middleware.cache.FetchFromCacheMiddleware', # 缓存, 必须在最后面
 ]
 
 ROOT_URLCONF = 'novel_site.urls'
@@ -96,7 +96,7 @@ CACHES = {
         'LOCATION': 'redis://127.0.0.1:6379',
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            # "PASSWORD": "123456",
+            "PASSWORD": "123456",
         },
     }
 }

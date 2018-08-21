@@ -18,16 +18,17 @@ from django.contrib import admin
 from django.views.generic import TemplateView
 import xadmin
 from django.views.static import serve
-from mxOnline.settings import MEDIA_ROOT
+from mxOnline.settings import MEDIA_ROOT, STATIC_ROOT
 
 from users.views import LoginView, RegisterView, ActiveView, ForgetPwdView, ResetView, \
-    ModifyPwdView, IndexView
+    ModifyPwdView, IndexView, LogoutView
 
 urlpatterns = [
     url(r'^xadmin/', xadmin.site.urls),
 
     url(r'^$', IndexView.as_view(), name="index"), #首页
     url(r'^login/$', LoginView.as_view(), name="login"),
+    url(r'^logout/$', LogoutView.as_view(), name="logout"),
     url(r'^register/$', RegisterView.as_view(), name="register"),
     url(r'^active/(?P<active_code>.*)/$', ActiveView.as_view(), name="active"),
     url(r'^forget/$', ForgetPwdView.as_view(), name="forget_pwd"),
@@ -46,6 +47,12 @@ urlpatterns = [
     #配置上传文件的访问处理函数
     url(r'^media/(?P<path>.*)$', serve, {"document_root":MEDIA_ROOT}),
 
+    # url(r'^static/(?P<path>.*)$', serve, {"document_root":STATIC_ROOT}),
+
     #第三方处理url
     url(r'^captcha/', include('captcha.urls')),
 ]
+
+#配置全局页面错误处理函数
+handler404 = "users.views.page_not_found"
+handler500 = "users.views.page_error"
