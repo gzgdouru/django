@@ -1,19 +1,19 @@
 from bs4 import BeautifulSoup
 import requests
 from django.http import Http404
-from . import models
+from novel import models
 
 relation = {
-    "tb_chapter_0" : models.TbChapter0,
-    "tb_chapter_1" : models.TbChapter1,
-    "tb_chapter_2" : models.TbChapter2,
-    "tb_chapter_3" : models.TbChapter3,
-    "tb_chapter_4" : models.TbChapter4,
-    "tb_chapter_5" : models.TbChapter5,
-    "tb_chapter_6" : models.TbChapter6,
-    "tb_chapter_7" : models.TbChapter7,
-    "tb_chapter_8" : models.TbChapter8,
-    "tb_chapter_9" : models.TbChapter9,
+    "tb_chapter_0" : models.Chapter0,
+    "tb_chapter_1" : models.Chapter1,
+    "tb_chapter_2" : models.Chapter2,
+    "tb_chapter_3" : models.Chapter3,
+    "tb_chapter_4" : models.Chapter4,
+    "tb_chapter_5" : models.Chapter5,
+    "tb_chapter_6" : models.Chapter6,
+    "tb_chapter_7" : models.Chapter7,
+    "tb_chapter_8" : models.Chapter8,
+    "tb_chapter_9" : models.Chapter9,
 }
 
 def get_content(url):

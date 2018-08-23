@@ -5,12 +5,47 @@
 {% endblock %}
 
 {% block main %}
-    <h3 class="">小说列表:</h3>
-    <div class="row">
-        {% for novel in novels %}
-            <div class="col-md-3">
-                <p><a href="{% url 'novel:novel_detail' novel.id %}">{{ novel.novel_name }}</a></p>
-            </div>
-        {% endfor %}
+{% for novel in novels.object_list %}
+    <div class="row" style="height: 300px; width: auto; margin:10px 0; padding: 10px 0; background-color: white; border-radius: 10px;">
+        <div class="col-xs-3">
+            <a href="{% url 'novel:novel_detail' novel.id %}">
+                <img src="{{ MEDIA_URL }}{{ novel.image }}" style="height: 280px; width: 280px;">
+            </a>
+        </div>
+        <div class="col-xs-9">
+            <p>书名: <a href="{% url 'novel:novel_detail' novel.id %}">{{ novel.novel_name }}</a></p>
+            <br>
+            <p>分类: <a href="#">{{ novel.category.name }}</a></p>
+            <br>
+            <p>作者: <a href="#">{{ novel.author.name }}</a></p>
+            <br>
+            <p>简介:<br> {{ novel.desc|default:'' }}</p>
+        </div>
     </div>
+{% endfor %}
+
+<div class="text-center">
+    <ul class="pagination">
+        {% if novels.has_previous %}
+            <li><a href="?{{ novels.previous_page_number.querystring }}">上一页</a></li>
+        {% endif %}
+
+        {% for page in novels.pages %}
+        {% if page %}
+        {% ifequal page novels.number %}
+        <li class="active"><a href="?{{ page.querystring }}">{{ page }}</a></li>
+        {% else %}
+        <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+        {% endifequal %}
+        {% else %}
+        <li class="none"><a href="#">...</a></li>
+        {% endif %}
+        {% endfor %}
+
+        {% if novels.has_next %}
+            <li><a href="?{{ novels.next_page_number.querystring }}">下一页</a></li>
+        {% endif %}
+    </ul>
+</div>
+
 {% endblock %}

@@ -1,25 +1,24 @@
 {% extends "base.html" %}
 
 {% block title %}
-    {{ novel.novel_name }}
+    {{ novel.novel_name }} - 章节
 {% endblock %}
 
 {% block main %}
-    <h3>{{ novel.novel_name }}-章节:</h3>
-    <table>
+    <table class="table table-bordered" style="margin: 10px 0">
+{#        <caption class="text-center">{{ novel.novel_name }}-章节</caption>#}
+        <tbody>
         <tr>
             {% for chapter in chapters %}
-                <td><a href="{% url 'novel:chapter_detail' novel.id chapter.id  %}">{{ chapter.chapter_name }}</a></td>
+                <td style="background-color: white;"><a href="{% url 'novel:chapter_detail' novel.id chapter.id %}">{{ chapter.chapter_name }}</a></td>
                 {% if forloop.counter|divisibleby:5 %}
                     </tr>
                     <tr>
                 {% endif %}
-                {% empty %}
-                暂无 {{ novel_name }} 章节
             {% endfor %}
             </tr>
+        </tbody>
     </table>
-
     </div>
 {% endblock %}
 

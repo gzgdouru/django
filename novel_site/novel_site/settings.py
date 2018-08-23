@@ -37,7 +37,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    #第三方app
+    'xadmin',
+    'crispy_forms',
+    #自定义app
     'novel',
+    'operation',
+    'authors',
 ]
 
 MIDDLEWARE = [
@@ -67,6 +73,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media',
             ],
         },
     },
@@ -81,7 +88,7 @@ WSGI_APPLICATION = 'novel_site.wsgi.application'
 DATABASES = {
      'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'novel_collect',
+        'NAME': 'novel_site',
         'USER': 'ouru',
         'PASSWORD': '!@#Test1992...',
         'HOST':'193.112.150.18',
@@ -131,7 +138,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)
@@ -140,4 +147,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+#上传文件保存路径
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
