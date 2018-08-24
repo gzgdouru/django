@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}分类详情页{% endblock %}
+
+{% block content %}
+    <table class="table table-bordered" style="margin: 10px 0">
+        <tbody>
+        <tr>
+            {% for novel in novels %}
+                <td style="background-color: white;"><a
+                        href="{% url 'novel:novel_detail' novel.id %}">{{ novel.novel_name }}</a></td>
+                {% if forloop.counter|divisibleby:4 %}
+                    </tr>
+                    <tr>
+                {% endif %}
+            {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+{% endblock %}

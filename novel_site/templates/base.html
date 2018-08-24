@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    {% block custom_css %}{% endblock %}
+
     <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
-<body style="background-color: gainsboro">
+<body style="background-color: gainsboro; margin: 0 0 10px 0;">
 <div class="container">
     <header>
         <nav class="nav navbar-default" role="navigation">
@@ -16,16 +18,17 @@
 {#            </div>#}
             <div>
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="/">首页</a></li>
-                    <li><a href="#">作者</a></li>
-                    <li><a href="#">分类</a></li>
+                    <li {% ifequal request.path '/' %}class="active"{% endifequal %}><a href="{% url 'index' %}">首页</a></li>
+                    <li {% ifequal request.path|slice:'9' '/authors/' %}class="active"{% endifequal %}><a href="{% url 'authors:authors_list' %}">作者</a></li>
+                    <li {% ifequal request.path|slice:'16' '/novel/category/' %}class="active"{% endifequal %}><a href="{% url 'novel:category_list' %}">分类</a></li>
                 </ul>
             </div>
 
             <div>
-                <form class="navbar-form navbar-right" role="search">
+                <form class="navbar-form navbar-right" role="search"  action="{% url 'novel:search' %}" method="post">
+                    {% csrf_token %}
                     <div class="form-group">
-                          <input type="text" class="form-control" placeholder="Search">
+                          <input type="text" class="form-control" name="keyword" placeholder="Search" required>
                     </div>
                     <button type="submit" class="btn btn-default">搜一哈</button>
                 </form>
@@ -33,7 +36,9 @@
         </nav>
     </header>
 
-    {% block main %}{% endblock %}
+    {% block bread %}{% endblock %}
+
+    {% block content %}{% endblock %}
 
     <footer style="clear: both">
         <hr>
@@ -42,5 +47,6 @@
         </p>
     </footer>
 </div>
+{% block custom_js %}{% endblock %}
 </body>
 </html>

@@ -4,7 +4,7 @@
     首页
 {% endblock %}
 
-{% block main %}
+{% block content %}
 {% for novel in novels.object_list %}
     <div class="row" style="height: 300px; width: auto; margin:10px 0; padding: 10px 0; background-color: white; border-radius: 10px;">
         <div class="col-xs-3">
@@ -17,7 +17,7 @@
             <br>
             <p>分类: <a href="#">{{ novel.category.name }}</a></p>
             <br>
-            <p>作者: <a href="#">{{ novel.author.name }}</a></p>
+            <p>作者: <a href="{% url 'authors:authors_list' %}">{{ novel.author.name }}</a></p>
             <br>
             <p>简介:<br> {{ novel.desc|default:'' }}</p>
         </div>

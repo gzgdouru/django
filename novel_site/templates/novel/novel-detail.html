@@ -4,14 +4,14 @@
     {{ novel.novel_name }} - 章节
 {% endblock %}
 
-{% block main %}
+{% block content %}
     <table class="table table-bordered" style="margin: 10px 0">
 {#        <caption class="text-center">{{ novel.novel_name }}-章节</caption>#}
         <tbody>
         <tr>
             {% for chapter in chapters %}
                 <td style="background-color: white;"><a href="{% url 'novel:chapter_detail' novel.id chapter.id %}">{{ chapter.chapter_name }}</a></td>
-                {% if forloop.counter|divisibleby:5 %}
+                {% if forloop.counter|divisibleby:4 %}
                     </tr>
                     <tr>
                 {% endif %}
@@ -19,6 +19,5 @@
             </tr>
         </tbody>
     </table>
-    </div>
 {% endblock %}
 

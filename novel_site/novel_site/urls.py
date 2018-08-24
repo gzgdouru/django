@@ -25,7 +25,10 @@ import xadmin
 urlpatterns = [
     url(r'^xadmin/', xadmin.site.urls),
     url(r'^$', IndexView.as_view(), name="index"),
+
     url(r'^novel/', include("novel.urls")),
+
+    url(r'^authors/', include("authors.urls")),
 
     # 配置上传文件的访问处理函数
     url(r'^media/(?P<path>.*)$', serve, {"document_root": MEDIA_ROOT}),

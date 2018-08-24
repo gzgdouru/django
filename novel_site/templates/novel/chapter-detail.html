@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}
+    章节
+{% endblock %}
+
+{% block content %}
+    <div style="background-color: white; margin: 10px 0; padding: 10px 20px; border-radius: 10px;">
+        <div class="row">
+            <div class="col-xs-4 text-center">
+                <a href="{% url 'novel:chapter_detail' novel.id pre_chapter.id %}">上一章</a>
+            </div>
+
+            <div class="col-xs-4 text-center">
+                <a href="{% url 'novel:novel_detail' novel.id %}">目录</a>
+            </div>
+
+            <div class="col-xs-4 text-center">
+                <a href="{% url 'novel:chapter_detail' novel.id next_chapter.id %}">下一章</a>
+            </div>
+        </div>
+
+        <div class="row" style="margin: 10px 0;">
+            <h3 class="text-center">{{ chapter.chapter_name }}</h3>
+            {{ chapter_content|safe }}
+            <br>
+            <br>
+            <p style="color: red"><strong>内容转载于:{{ chapter.chapter_url }}, 如有侵权, 请通知删除.</strong></p>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-4 text-center">
+                <a href="{% url 'novel:chapter_detail' novel.id pre_chapter.id %}">上一章</a>
+            </div>
+
+            <div class="col-xs-4 text-center">
+                <a href="{% url 'novel:novel_detail' novel.id %}">目录</a>
+            </div>
+
+            <div class="col-xs-4 text-center">
+                <a href="{% url 'novel:chapter_detail' novel.id next_chapter.id %}">下一章</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
