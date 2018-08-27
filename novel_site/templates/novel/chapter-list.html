@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {{ novel.novel_name }} - 章节
+{% endblock %}
+
+{% block content %}
+    <div class="panel panel-primary" style="margin: 20px 0">
+        <div class="panel-heading">
+            <a class="panel-title"
+               href="{% url 'novel:chapter_list' novel.id %}?sort={% ifequal sortby '' %}reverse{% endifequal %}">
+                {% ifequal sortby 'reverse' %}<small>正序↑</small>{% else %}<small>倒序↓</small>{% endifequal %}</a>
+        </div>
+
+        <table class="table table-bordered" style="margin: 10px 0">
+            <tbody>
+            <tr>
+                {% for chapter in chapters %}
+                    <td style="background-color: white;"><a
+                            href="{% url 'novel:chapter_detail' novel.id chapter.id %}">{{ chapter.chapter_name }}</a>
+                    </td>
+                    {% if forloop.counter|divisibleby:4 %}
+                        </tr>
+                        <tr>
+                    {% endif %}
+                {% endfor %}
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+

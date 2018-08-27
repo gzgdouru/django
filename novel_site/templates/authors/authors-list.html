@@ -16,12 +16,12 @@
         <div class="row"
              style="height: 300px; width: auto; margin:10px 0; padding: 10px 0; background-color: white; border-radius: 10px;">
             <div class="col-xs-3">
-                <a href="{% url 'authors:authors_list' %}">
+                <a href="{% url 'authors:authors_detail' author.id %}">
                     <img src="{{ MEDIA_URL }}{{ author.image }}" style="height: 280px; width: 280px;">
                 </a>
             </div>
             <div class="col-xs-9">
-                <p>笔名: <a href="{% url 'authors:authors_list' %}">{{ author.name }}</a></p>
+                <p>笔名: <a href="{% url 'authors:authors_detail' author.id %}">{{ author.name }}</a></p>
                 <br>
                 <p>简介:<br> {{ author.desc|default:'' }}</p>
             </div>

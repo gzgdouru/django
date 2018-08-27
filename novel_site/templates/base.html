@@ -13,22 +13,27 @@
 <div class="container">
     <header>
         <nav class="nav navbar-default" role="navigation">
-{#            <div class="navbar-header">#}
-{#                <a class="navbar-brand" href="#">COCO3D</a>#}
-{#            </div>#}
+            {#            <div class="navbar-header">#}
+            {#                <a class="navbar-brand" href="#">COCO3D</a>#}
+            {#            </div>#}
             <div>
                 <ul class="nav navbar-nav">
-                    <li {% ifequal request.path '/' %}class="active"{% endifequal %}><a href="{% url 'index' %}">首页</a></li>
-                    <li {% ifequal request.path|slice:'9' '/authors/' %}class="active"{% endifequal %}><a href="{% url 'authors:authors_list' %}">作者</a></li>
-                    <li {% ifequal request.path|slice:'16' '/novel/category/' %}class="active"{% endifequal %}><a href="{% url 'novel:category_list' %}">分类</a></li>
+                    <li {% ifequal request.path '/' %}class="active"{% endifequal %}><a href="{% url 'index' %}">首页</a>
+                    </li>
+                    <li {% if request.path|slice:'7' == '/novel/' and request.path|slice:'15' != '/novel/category' %}class="active"{% endif %}>
+                        <a href="{% url 'novel:novel_list' %}">小说</a></li>
+                    <li {% ifequal request.path|slice:'9' '/authors/' %}class="active"{% endifequal %}>
+                        <a href="{% url 'authors:authors_list' %}">作者</a></li>
+                    <li {% ifequal request.path|slice:'16' '/novel/category/' %}class="active"{% endifequal %}>
+                        <a href="{% url 'novel:category_list' %}">分类</a></li>
                 </ul>
             </div>
 
             <div>
-                <form class="navbar-form navbar-right" role="search"  action="{% url 'novel:search' %}" method="post">
+                <form class="navbar-form navbar-right" role="search" action="{% url 'novel:search' %}" method="post">
                     {% csrf_token %}
                     <div class="form-group">
-                          <input type="text" class="form-control" name="keyword" placeholder="Search" required>
+                        <input type="text" class="form-control" name="keyword" placeholder="Search" required>
                     </div>
                     <button type="submit" class="btn btn-default">搜一哈</button>
                 </form>

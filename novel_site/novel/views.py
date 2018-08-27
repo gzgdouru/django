@@ -5,6 +5,7 @@ from django.db.models import Q
 from .models import Novel, NovelCategory
 from .untis import get_content, get_chapter_table
 from .forms import SearchForm
+from authors.models import Author
 
 from pure_pagination import Paginator, EmptyPage, PageNotAnInteger
 
@@ -16,6 +17,22 @@ class IndexView(View):
     首页
     '''
     def get(self, request):
+        categorys = NovelCategory.objects.all()[:12]
+        authors = Author.objects.all()[:8]
+        novels = Novel.objects.all()[:8]
+
+        return render(request, "index.html", context={
+            "categorys" : categorys,
+            "authors" : authors,
+            "novels" : novels,
+        })
+
+
+class NovelListView(View):
+    '''
+    小说列表
+    '''
+    def get(self, request):
         all_novels = Novel.objects.all()
 
         try:
@@ -25,51 +42,60 @@ class IndexView(View):
         p = Paginator(all_novels, 5, request=request)
         novels = p.page(page)
 
-        return render(request, "index.html", context={
-            "novels" : novels,
+        return render(request, "novel/novel-list.html", context={
+            "novels": novels,
         })
 
 
-def novel_detail(request, novelId):
+class ChapterListView(View):
     '''
-    小说详情
+    章节列表
     '''
-    novelObj = get_object_or_404(Novel, pk=novelId)
-    chapterTable = get_chapter_table(novelObj.id)
-    chapters = chapterTable.objects.all().order_by("-chapter_index")
+    def get(self, request, novel_id):
+        novel = get_object_or_404(Novel, pk=novel_id)
+        chapterTable = get_chapter_table(novel.id)
+        chapters = chapterTable.objects.all().order_by("chapter_index")
 
-    return render(request, "novel/novel-detail.html", context={
-        "novel" : novelObj,
-        "chapters":chapters,
-    })
+        #排序
+        sortby = request.GET.get("sort", "")
+        if sortby:
+            chapters = chapters.order_by("-chapter_index")
 
-def chapter_detail(request, novelId, chapterId):
+        return render(request, "novel/chapter-list.html", context={
+            "novel" : novel,
+            "chapters" : chapters,
+            "sortby" : sortby,
+        })
+
+
+class ChapterDetailView(View):
     '''
     章节详情
     '''
-    novelObj = get_object_or_404(Novel, pk=novelId)
+    def get(self, request, novel_id, chapter_id):
+        novelObj = get_object_or_404(Novel, pk=novel_id)
 
-    chapterTable = get_chapter_table(novelObj.id)
-    chapterObj = get_object_or_404(chapterTable, pk=chapterId)
+        chapterTable = get_chapter_table(novelObj.id)
+        chapterObj = get_object_or_404(chapterTable, pk=chapter_id)
 
-    #取上一章节
-    pre_chapter = chapterTable.objects.filter(novel_id=int(novelId), chapter_index__lt=chapterObj.chapter_index).order_by("-chapter_index").first()
-    if not pre_chapter: pre_chapter = chapterObj
+        #取上一章节
+        pre_chapter = chapterTable.objects.filter(novel_id=int(chapter_id), chapter_index__lt=chapterObj.chapter_index).order_by("-chapter_index").first()
+        if not pre_chapter: pre_chapter = chapterObj
 
-    #取下一章节
-    next_chapter = chapterTable.objects.filter(novel_id=int(novelId), chapter_index__gt=chapterObj.chapter_index).order_by("chapter_index").first()
-    if not next_chapter: next_chapter = chapterObj
+        #取下一章节
+        next_chapter = chapterTable.objects.filter(novel_id=int(chapter_id), chapter_index__gt=chapterObj.chapter_index).order_by("chapter_index").first()
+        if not next_chapter: next_chapter = chapterObj
 
-    content = get_content(chapterObj.chapter_url)
-    if not content: content = "内容正在手打中, 请稍后..."
+        content = get_content(chapterObj.chapter_url)
+        if not content: content = "内容正在手打中, 请稍后..."
 
-    return render(request, "novel/chapter-detail.html", context={
-        "chapter" : chapterObj,
-        "chapter_content" : content,
-        "novel" : novelObj,
-        "pre_chapter" : pre_chapter,
-        "next_chapter" : next_chapter,
-    })
+        return render(request, "novel/chapter-detail.html", context={
+            "chapter" : chapterObj,
+            "chapter_content" : content,
+            "novel" : novelObj,
+            "pre_chapter" : pre_chapter,
+            "next_chapter" : next_chapter,
+        })
 
 
 class CategoryListView(View):
@@ -78,6 +104,7 @@ class CategoryListView(View):
     '''
     def get(self, request):
         all_categorys = NovelCategory.objects.all()
+
         return render(request, "novel/category-list.html", context={
             "categorys" : all_categorys,
         })
@@ -89,8 +116,16 @@ class CategoryDetailView(View):
     '''
     def get(self, request, category_id):
         all_novels = Novel.objects.filter(category_id=category_id)
-        return render(request, "novel/category-detail.html", context={
-            "novels" : all_novels,
+
+        try:
+            page = request.GET.get('page', 1)
+        except PageNotAnInteger:
+            page = 1
+        p = Paginator(all_novels, 5, request=request)
+        novels = p.page(page)
+
+        return render(request, "novel/novel-list.html", context={
+            "novels" : novels,
         })
 
 

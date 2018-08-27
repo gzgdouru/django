@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.generic import View
 
 from .models import Author
@@ -24,5 +24,18 @@ class AuthorsListView(View):
 
         return render(request, "authors/authors-list.html", context={
             "authors" : authors,
+        })
+
+
+class AuthorsDetailView(View):
+    '''
+    作者详细
+    '''
+    def get(self, request, author_id):
+        author = get_object_or_404(Author, pk=author_id)
+        novels = author.novel_set.all()
+        return render(request, "authors/author-detail.html", context={
+            "author" : author,
+            "novels" : novels,
         })
 
