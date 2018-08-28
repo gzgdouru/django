@@ -54,7 +54,7 @@ class ChapterListView(View):
     def get(self, request, novel_id):
         novel = get_object_or_404(Novel, pk=novel_id)
         chapterTable = get_chapter_table(novel.id)
-        chapters = chapterTable.objects.all().order_by("chapter_index")
+        chapters = chapterTable.objects.filter(novel=novel).order_by("chapter_index")
 
         #排序
         sortby = request.GET.get("sort", "")
@@ -144,6 +144,6 @@ class SearchView(View):
         p = Paginator(all_novels, 5, request=request)
         novels = p.page(page)
 
-        return render(request, "index.html", context={
+        return render(request, "novel/novel-list.html", context={
             "novels" : novels,
         })
