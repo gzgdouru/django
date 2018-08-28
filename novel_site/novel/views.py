@@ -79,11 +79,11 @@ class ChapterDetailView(View):
         chapterObj = get_object_or_404(chapterTable, pk=chapter_id)
 
         #取上一章节
-        pre_chapter = chapterTable.objects.filter(novel_id=int(chapter_id), chapter_index__lt=chapterObj.chapter_index).order_by("-chapter_index").first()
+        pre_chapter = chapterTable.objects.filter(novel_id=int(novel_id), chapter_index__lt=chapterObj.chapter_index).order_by("-chapter_index").first()
         if not pre_chapter: pre_chapter = chapterObj
 
         #取下一章节
-        next_chapter = chapterTable.objects.filter(novel_id=int(chapter_id), chapter_index__gt=chapterObj.chapter_index).order_by("chapter_index").first()
+        next_chapter = chapterTable.objects.filter(novel_id=int(novel_id), chapter_index__gt=chapterObj.chapter_index).order_by("chapter_index").first()
         if not next_chapter: next_chapter = chapterObj
 
         content = get_content(chapterObj.chapter_url)
