@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import View
 from django.db.models import Q
+import time
 
 from .models import Novel, NovelCategory
 from .untis import get_content, get_chapter_table
@@ -78,12 +79,14 @@ class ChapterDetailView(View):
         chapterTable = get_chapter_table(novelObj.id)
         chapterObj = get_object_or_404(chapterTable, pk=chapter_id)
 
+        sortby = request.GET.get("sort", "")
+
         #取上一章节
-        pre_chapter = chapterTable.objects.filter(novel_id=int(chapter_id), chapter_index__lt=chapterObj.chapter_index).order_by("-chapter_index").first()
+        pre_chapter = chapterTable.objects.filter(novel_id=int(novel_id), chapter_index__lt=chapterObj.chapter_index).order_by("-chapter_index").first()
         if not pre_chapter: pre_chapter = chapterObj
 
         #取下一章节
-        next_chapter = chapterTable.objects.filter(novel_id=int(chapter_id), chapter_index__gt=chapterObj.chapter_index).order_by("chapter_index").first()
+        next_chapter = chapterTable.objects.filter(novel_id=int(novel_id), chapter_index__gt=chapterObj.chapter_index).order_by("chapter_index").first()
         if not next_chapter: next_chapter = chapterObj
 
         content = get_content(chapterObj.chapter_url)
@@ -95,6 +98,7 @@ class ChapterDetailView(View):
             "novel" : novelObj,
             "pre_chapter" : pre_chapter,
             "next_chapter" : next_chapter,
+            "sortby" : sortby,
         })
 
 

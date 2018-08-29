@@ -151,7 +151,7 @@ class Novel(models.Model):
     site_name = models.CharField(max_length=32, verbose_name="小说网站")
     url = models.CharField(unique=True, max_length=255, verbose_name="小说链接")
     category = models.ForeignKey(NovelCategory, models.CASCADE, verbose_name="小说分类", null=True, blank=True)
-    image = models.ImageField(upload_to='novel/%Y/%m/', max_length=200, verbose_name="小说图片", null=True, blank=True, default="default.jpg")
+    image = models.ImageField(upload_to='novel/%Y/%m/', max_length=200, verbose_name="小说图片", null=True, blank=True, default="default_novel.jpg")
     author = models.ForeignKey(Author, models.CASCADE, verbose_name="小说作者", null=True, blank=True)
     desc = models.CharField(max_length=255, verbose_name="小说简介", null=True, blank=True)
     detail = models.TextField(verbose_name="详细介绍", null=True, blank=True)
